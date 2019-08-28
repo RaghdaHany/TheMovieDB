@@ -1,5 +1,6 @@
 package com.example.themoviedb;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView viewData;
     Button fetchDataBtn;
+    Button okHttpBtn ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new FetchingData().execute();
+            }
+        });
+
+        okHttpBtn = (Button) findViewById(R.id.okHttpBtn);
+        okHttpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),OkHttpActivity.class);
+                startActivity(i);
             }
         });
     }
