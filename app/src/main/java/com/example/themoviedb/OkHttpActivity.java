@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,17 +28,17 @@ import okhttp3.Response;
 public class OkHttpActivity extends AppCompatActivity {
     TextView okDataTextView;
     Button okHttpDataBtn;
-    private ArrayList <Movie> moviesList;
+    private ArrayList<Movie> moviesList;
 
-    public String url= "https://api.themoviedb.org/3/movie/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43";
+    public String url = "https://api.themoviedb.org/3/movie/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ok_http);
 
-        okDataTextView= (TextView)findViewById(R.id.okHttpDataTextView);
-        okHttpDataBtn = (Button)findViewById(R.id.okHttpDataBtn);
+        okDataTextView = (TextView) findViewById(R.id.okHttpDataTextView);
+        okHttpDataBtn = (Button) findViewById(R.id.okHttpDataBtn);
         okHttpDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,16 +69,17 @@ public class OkHttpActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 final String myResponse = response.body().string();
-                moviesList = parseResult (myResponse);        //adding when using jsonParser
+                 moviesList = parsigJson(myResponse);        //adding when using jsonParser
+//                  moviesList = parsigWithGson(myResponse);  // adding when using gson function
 
                 OkHttpActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        okDataTextView.setText(myResponse);
                         for (int i = 0; i < moviesList.size(); i++) {
                             okDataTextView.append(moviesList.get(i).original_tiltle);
                             okDataTextView.append("\n");
                         }
+//                        okDataTextView.setText(moviesList.get(0).title);    // adding when using gson function
                     }
                 });
 
@@ -84,17 +87,17 @@ public class OkHttpActivity extends AppCompatActivity {
         });
     }
 
-    ArrayList<Movie> parseResult (String movieString){
+    ArrayList<Movie> parsigJson(String movieString) {
 
-       ArrayList<Movie> results = new ArrayList<>();
-       JSONObject jsonObject = null;
+        ArrayList<Movie> results = new ArrayList<>();
+        JSONObject jsonObject = null;
 
         try {
 
             jsonObject = new JSONObject(movieString);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
 
-            for (int i=0; i<jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
 
                 jsonObject = jsonArray.getJSONObject(i);
                 Movie movie = new Movie();
@@ -123,4 +126,12 @@ public class OkHttpActivity extends AppCompatActivity {
         return results;
     }
 
+
+    ArrayList<Movie> parsigWithGson(String movieString) {
+        Gson gson = new Gson();
+        MoviesArrayList moviesArrayList = gson.fromJson(movieString,MoviesArrayList.class);
+        ArrayList <Movie> movies = moviesArrayList.movieArrayList;
+        return movies ;
+
+    }
 }
