@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     TextView viewData;
     Button fetchDataBtn;
     Button okHttpBtn ;
+    Button startAppBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),OkHttpActivity.class);
+                startActivity(i);
+            }
+        });
+
+        startAppBtn = findViewById(R.id.startApp);
+        startAppBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this , PopularPeopleActivity.class);
                 startActivity(i);
             }
         });
