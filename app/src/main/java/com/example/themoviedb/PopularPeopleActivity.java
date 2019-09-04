@@ -108,12 +108,6 @@ public class PopularPeopleActivity extends AppCompatActivity  {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            //this method will be running on UI thread
-//            pdLoading.setMessage("\tLoading...");
-//            pdLoading.setCancelable(false);
-//            pdLoading.show();
-
         }
 
         @Override
@@ -177,15 +171,11 @@ public class PopularPeopleActivity extends AppCompatActivity  {
 
         @Override
         protected void onPostExecute(String result) {
-//            pdLoading.dismiss();
-//            pdLoading.dismiss();
+
             try {
                 JSONObject obj = new JSONObject(result);
                 JSONArray jArray =  obj.getJSONArray("results");
-//                JSONObject json_Resula = result.;
-//                JSONArray jArray = new JSONArray(result);
 
-                // Extract data from json and store into ArrayList as class objects
                 for(int i=0;i<jArray.length();i++){
                     JSONObject json_data = jArray.getJSONObject(i);
                     PopularPeople person = new PopularPeople();

@@ -142,9 +142,12 @@ public class PersonDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
+
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("profiles");
+
                 for (int i = 0; i< jsonArray.length(); i++) {
+
                     JSONObject profileResult = jsonArray.getJSONObject(i);
                     Profiles personProfile = new Profiles();
                     personProfile.setFile_path(profileResult.getString("file_path"));
