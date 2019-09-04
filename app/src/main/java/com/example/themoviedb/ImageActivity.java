@@ -29,7 +29,7 @@ public class ImageActivity extends AppCompatActivity {
     ImageView personImage;
     Button saveImageBtn;
 
-    String picturePath;
+    String photo;
     URL ImageUrl = null;
     InputStream inputStream = null;
     Bitmap bmImg = null;
@@ -43,12 +43,9 @@ public class ImageActivity extends AppCompatActivity {
         saveImageBtn = findViewById(R.id.saveImageBtn);
 
         Intent intent = getIntent();
-        Bundle bundle =  intent.getBundleExtra("data");
-        if(!bundle.isEmpty()) {
-            picturePath = bundle.getString("picture_path");
-        }
+        photo = intent.getStringExtra("picture_path");
 
-        new LoadImage(personImage).execute(picturePath);
+        new LoadImage(personImage).execute(photo);
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +64,7 @@ public class ImageActivity extends AppCompatActivity {
     private void saveImage(){
         personImage.setDrawingCacheEnabled(true);
         Bitmap b = personImage.getDrawingCache();
-        MediaStore.Images.Media.insertImage(getContentResolver(), b, picturePath, "");
-        Toast.makeText(ImageActivity.this, "Saved to gallery", Toast.LENGTH_LONG).show();
+        MediaStore.Images.Media.insertImage(getContentResolver(), b, photo, "");
+        Toast.makeText(ImageActivity.this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
     }
 }

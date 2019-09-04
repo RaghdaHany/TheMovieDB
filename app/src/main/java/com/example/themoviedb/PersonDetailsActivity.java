@@ -89,16 +89,6 @@ public class PersonDetailsActivity extends AppCompatActivity {
         adapter = new GridAdapter(profiles, PersonDetailsActivity.this);
         recyclerView.setAdapter(adapter);
 
-//        personImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(PersonDetailsActivity.this, ImageActivity.class);
-//                Bundle arg = new Bundle();
-//                arg.putString("picture_path", popprofile);
-//                intent.putExtra("data", arg);
-//                startActivity(intent);
-//            }
-//        });
 
         new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
     }
