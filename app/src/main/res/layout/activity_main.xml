@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.themoviedb.MainActivity">
 
     <Button
         android:id="@+id/fetchDataBtn"
@@ -15,13 +15,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fetchDataBtn"
+        android:layout_marginTop="14dp"
         android:text="go to OkHttpRequest" />
+
+    <Button
+        android:id="@+id/startApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/okHttpBtn"
+        android:layout_marginTop="81dp"
+        android:text="START TMDB APP"
+        android:textColor="#ff0000" />
 
     <ScrollView
         android:id="@+id/SCROLLER_ID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/okHttpBtn"
+        android:layout_below="@id/startApp"
         android:fillViewport="true"
         android:scrollbars="vertical">
 
