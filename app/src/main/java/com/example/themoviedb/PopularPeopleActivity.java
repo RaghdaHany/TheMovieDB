@@ -101,7 +101,7 @@ public class PopularPeopleActivity extends AppCompatActivity  {
 
     private class AsyncFetch extends AsyncTask<String, String, String> {
 
-        ProgressDialog pdLoading = new ProgressDialog(PopularPeopleActivity.this);
+//        ProgressDialog pdLoading = new ProgressDialog(PopularPeopleActivity.this);
         HttpURLConnection conn;
         URL url = null;
 

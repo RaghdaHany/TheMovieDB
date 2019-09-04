@@ -1,6 +1,9 @@
 package com.example.themoviedb;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,24 +33,27 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.themoviedb.PopularPeopleActivity.CONNECTION_TIMEOUT;
 import static com.example.themoviedb.PopularPeopleActivity.READ_TIMEOUT;
 
 public class PersonDetailsActivity extends AppCompatActivity {
+
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+
     PopularPeople popularPeople;
     ImageView personImage;
     TextView personName;
     TextView personDep;
     TextView personAdult;
-    int id = 1;
-    String idStr ;
-
     private RecyclerView recyclerView;
-    private GridAdapter gridAdapter;
-    LinearLayoutManager layoutManager;
-    List<ProfilesPojo> profilesPojosList;
+    ArrayList<Profiles> profiles ;
+    GridAdapter adapter ;
+    int id ;
 
+    LinearLayoutManager layoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,121 +67,106 @@ public class PersonDetailsActivity extends AppCompatActivity {
         Intent i = getIntent();
         String name = i.getStringExtra("person_name");
         String dep = i.getStringExtra("person_department");
+        id = i.getIntExtra("id", 1);
 
         boolean adult = i.getBooleanExtra("person_adult", true);
         String adultStr = new Boolean(adult).toString();
 
-        Double pop = i.getDoubleExtra("person_popularity", 24.111);
-        String popularityStr = new Double(pop).toString();
-
         String photo_first_path = "https://image.tmdb.org/t/p/w500/";
         String profile_path = i.getStringExtra("profile_path");
-//        ImageLoader imageLoader = new ImageLoader(this);
-//        imageLoader.DisplayImage(photo_first_path+profile_path , personImage);
         new LoadImage(personImage).execute(photo_first_path + profile_path);
+
         personName.setText(name);
         personDep.setText(dep);
         personAdult.setText("adult : " + adultStr);
-        ///////////////////////////////////////////////////
+
+        Intent intent = getIntent();
+        String profile = intent.getStringExtra("profile_path");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        layoutManager = new GridLayoutManager(this, 3);
-        profilesPojosList = new ArrayList<>();
-        gridAdapter = new GridAdapter(PersonDetailsActivity.this, profilesPojosList);
-        recyclerView.setAdapter(gridAdapter);
+        layoutManager = new GridLayoutManager(this ,3 );
+        profiles = new ArrayList<>();
+        adapter = new GridAdapter(profiles, PersonDetailsActivity.this);
+        recyclerView.setAdapter(adapter);
 
-        id = i.getIntExtra("person_id", 1);
-        idStr = new Integer(id).toString();
-        new FetchData().execute();
+//        personImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(PersonDetailsActivity.this, ImageActivity.class);
+//                Bundle arg = new Bundle();
+//                arg.putString("picture_path", popprofile);
+//                intent.putExtra("data", arg);
+//                startActivity(intent);
+//            }
+//        });
+
+        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
     }
 
-    private class FetchData extends AsyncTask<String, String, String> {
+    public class getPhotos extends AsyncTask<String, String, String> {
 
-        HttpURLConnection conn;
-        URL url = null;
+        HttpURLConnection httpURLConnection = null;
+        URL url = null ;
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(String... urls) {
+            BufferedReader reader = null;
+
             try {
-                    url = new URL("https://api.themoviedb.org/3/person/"+ id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
+                url = new URL(urls[0]);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.connect();
+
+                InputStream stream = httpURLConnection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuffer buffer = new StringBuffer();
+
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+                return buffer.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                return e.toString();
-            }
-
-            try {
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(READ_TIMEOUT);
-                conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                conn.setRequestMethod("GET");
-                conn.setDoOutput(true);
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return e1.toString();
-            }
-
-            try {
-
-                int response_code = conn.getResponseCode();
-                if (response_code == HttpURLConnection.HTTP_OK) {
-
-                    // Read data sent from server
-                    InputStream input = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-
-                    // Pass data to onPostExecute method
-                    return (result.toString());
-
-                } else {
-
-                    return ("unsuccessful");
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
-                return e.toString();
-            } finally {
-                conn.disconnect();
             }
+            finally {
+                if (httpURLConnection != null)
+                    httpURLConnection.disconnect();
+                try {
+                    if (reader != null)
+                        reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
-//            pdLoading.dismiss();
-//            pdLoading.dismiss();
+            super.onPostExecute(result);
             try {
-                JSONObject obj = new JSONObject(result);
-                JSONArray jArray =  obj.getJSONArray("profiles");
-//                JSONObject json_Resula = result.;
-//                JSONArray jArray = new JSONArray(result);
-
-                // Extract data from json and store into ArrayList as class objects
-                for(int i=0;i<jArray.length();i++){
-                    JSONObject json_data = jArray.getJSONObject(i);
-                    ProfilesPojo profile = new ProfilesPojo();
-                    profile.file_path = json_data.getString("file_path");
-
-                    profilesPojosList.add(profile);
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.getJSONArray("profiles");
+                for (int i = 0; i< jsonArray.length(); i++) {
+                    JSONObject profileResult = jsonArray.getJSONObject(i);
+                    Profiles personProfile = new Profiles();
+                    personProfile.setFile_path(profileResult.getString("file_path"));
+                    profiles.add(personProfile);
                 }
 
-                // Setup and Handover data to recyclerview
-                gridAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 recyclerView.setLayoutManager(layoutManager);
 
             } catch (JSONException e) {
-                Toast.makeText(PersonDetailsActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             }
-
         }
-
     }
-
-
 }
