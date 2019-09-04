@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class PopularPeopleActivity extends AppCompatActivity  {
     SwipeRefreshLayout mSwipeRefreshLayout;
     List<PopularPeople> popularPeopleList ;
     ProgressBar progressBar;
+    Button searchApi ;
+    Button finishSearch ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +73,15 @@ public class PopularPeopleActivity extends AppCompatActivity  {
             @Override
             public void onRefresh() {
 
+                int size = popularPeopleList.size();
+                if (size > 0) {
+                    for (int i = 0; i < size; i++) {
+                        popularPeopleList.remove(0);
+                    }
+                    popularPeopleAdapter.notifyItemRangeRemoved(0, size);
+                }
+                page =  0 ;
                 new AsyncFetch().execute();
-                recyclerView.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
 
             }
@@ -95,6 +104,22 @@ public class PopularPeopleActivity extends AppCompatActivity  {
                         progressBar.setVisibility(View.VISIBLE);
                         new AsyncFetch().execute();
                 }
+            }
+        });
+
+        searchApi = findViewById(R.id.searchBtn);
+        searchApi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        finishSearch = findViewById(R.id.finishSearchBtn);
+        finishSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AsyncFetch().execute();
             }
         });
     }
