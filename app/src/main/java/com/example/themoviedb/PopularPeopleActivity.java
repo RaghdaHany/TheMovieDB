@@ -8,12 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.themoviedb.memory_cache.ImageLoader;
@@ -118,25 +118,28 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         menuItem = menu.findItem(R.id.search_btn);
         searchView = (android.widget.SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(this);
+        searchView.clearFocus();
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        popularPeopleList.clear();
         if(!s.equals("")) {
+            popularPeopleList.clear();
             new AsyncFetch().execute(search_url + s);
         }
-        return false;
+        searchView.clearFocus();
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        popularPeopleList.clear();
         if (searchView.getQuery().length() == 0) {
+            popularPeopleList.clear();
+            searchView.clearFocus();
             new AsyncFetch().execute(data_url);
         }
-        return false;
+        return true;
     }
 
     private class AsyncFetch extends AsyncTask<String, String, String> {
