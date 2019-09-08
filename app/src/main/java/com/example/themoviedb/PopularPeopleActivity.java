@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularPeopleActivity extends AppCompatActivity  {
+public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener {
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -45,6 +48,8 @@ public class PopularPeopleActivity extends AppCompatActivity  {
     SwipeRefreshLayout mSwipeRefreshLayout;
     List<PopularPeople> popularPeopleList ;
     ProgressBar progressBar;
+
+    MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,26 @@ public class PopularPeopleActivity extends AppCompatActivity  {
                 }
             }
         });
+    }
+
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        menuItem = menu.findItem(R.id.search_btn);
+        android.widget.SearchView searchView = (android.widget.SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 
     private class AsyncFetch extends AsyncTask<String, String, String> {
