@@ -106,7 +106,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                 if (isScrolling && (currentItems + scrollingOutItems == totalItems)){
                     isScrolling = false ;
                         progressBar.setVisibility(View.VISIBLE);
-                        new AsyncFetch().execute();
+                        new AsyncFetch().execute(data_url);
                 }
             }
         });
