@@ -40,7 +40,11 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     public static final int READ_TIMEOUT = 15000;
     Boolean isScrolling = false ;
     int currentItems , totalItems , scrollingOutItems ;
-     public int  page = 0 ;
+    public int  page = 0 ;
+    String search_url;
+    String data_url;
+    private String search_str="";
+    private String pageStr="";
 
     private RecyclerView recyclerView;
     private PopularPeopleAdapter popularPeopleAdapter;
@@ -48,6 +52,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     SwipeRefreshLayout mSwipeRefreshLayout;
     List<PopularPeople> popularPeopleList ;
     ProgressBar progressBar;
+    android.widget.SearchView searchView;
 
     MenuItem menuItem;
 
@@ -63,7 +68,10 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         popularPeopleAdapter = new PopularPeopleAdapter(PopularPeopleActivity.this, popularPeopleList);
         recyclerView.setAdapter(popularPeopleAdapter);
 
-        new AsyncFetch().execute();
+        data_url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page="+pageStr;
+        search_url = "https://api.themoviedb.org/3/search/person?api_key=e6f20f39139b1f5a2be132cbaaa9ce43&query=";
+
+        new AsyncFetch().execute(data_url);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
@@ -93,8 +101,8 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 currentItems = layoutManager.getChildCount();
-                totalItems = layoutManager.getItemCount();
                 scrollingOutItems = layoutManager.findFirstVisibleItemPosition();
+                totalItems = layoutManager.getItemCount();
                 if (isScrolling && (currentItems + scrollingOutItems == totalItems)){
                     isScrolling = false ;
                         progressBar.setVisibility(View.VISIBLE);
@@ -104,23 +112,30 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         });
     }
 
-    // create an action bar button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_menu, menu);
         menuItem = menu.findItem(R.id.search_btn);
-        android.widget.SearchView searchView = (android.widget.SearchView) menuItem.getActionView();
+        searchView = (android.widget.SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(this);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+        popularPeopleList.clear();
+        if(!s.equals("")) {
+            new AsyncFetch().execute(search_url + s);
+        }
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        popularPeopleList.clear();
+        if (searchView.getQuery().length() == 0) {
+            new AsyncFetch().execute(data_url);
+        }
         return false;
     }
 
@@ -141,9 +156,8 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
 
                     if(page<500){
                         page =page+1;
-                        String pageStr = String.valueOf(page);
-                        url = new URL("https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page="+pageStr);
-
+                        pageStr = String.valueOf(page);
+                        url = new URL(params[0]);
                     }
 
             } catch (MalformedURLException e) {
