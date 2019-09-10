@@ -40,13 +40,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     public static final int READ_TIMEOUT = 15000;
     Boolean isScrolling = false ;
     int currentItems , totalItems , scrollingOutItems ;
-    public int  page = 0 ;
-    String search_url;
-    String data_url;
-    private Boolean isSearchAction= false;
-    private String searchstr = "";
-    private String pageStr="";
-
+    public int  page = 1 ;
     private RecyclerView recyclerView;
     private PopularPeopleAdapter popularPeopleAdapter;
     LinearLayoutManager layoutManager ;
@@ -55,7 +49,15 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     ProgressBar progressBar;
     android.widget.SearchView searchView;
 
+    String search_url;
+    String data_url;
+    private Boolean isSearchAction= false;
+    private String searchstr = "";
+    private String pageStr="";
     MenuItem menuItem;
+
+    int searchPage = 1;
+    String searchPageStr="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,8 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         popularPeopleAdapter = new PopularPeopleAdapter(PopularPeopleActivity.this, popularPeopleList);
         recyclerView.setAdapter(popularPeopleAdapter);
 
-        data_url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page="+pageStr;
+        pageStr = String.valueOf(page);
+        data_url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page=";
         search_url = "https://api.themoviedb.org/3/search/person?api_key=e6f20f39139b1f5a2be132cbaaa9ce43&query=";
 
 //        isSearchAction = false;
@@ -88,10 +91,14 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                 popularPeopleAdapter.notifyDataSetChanged();
 //                isSearchAction = true;
                 if (isSearchAction) {
-                    new AsyncFetch().execute(search_url+searchstr);
+                    searchPage=1;
+                    searchPageStr = String.valueOf(searchPage);
+                    new AsyncFetch().execute(search_url+searchstr+"&page="+searchPageStr);
                 }
                 else {
-                    new AsyncFetch().execute(data_url);
+                    page=1;
+                    pageStr = String.valueOf(page);
+                    new AsyncFetch().execute(data_url+pageStr);
                 }
                 recyclerView.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -115,10 +122,14 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                     isScrolling = false;
                     progressBar.setVisibility(View.VISIBLE);
                     if (isSearchAction) {
-                        new AsyncFetch().execute(search_url+searchstr);
+                        searchPage = searchPage + 1;
+                        searchPageStr = String.valueOf(searchPage);
+                        new AsyncFetch().execute(search_url+searchstr+"&page="+searchPageStr);
                     }
                     else {
-                        new AsyncFetch().execute(data_url);
+                        page = page + 1;
+                        pageStr = String.valueOf(page);
+                        new AsyncFetch().execute(data_url+pageStr);
                     }
                 }
             }
@@ -172,12 +183,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         @Override
         protected String doInBackground(String... params) {
             try {
-
-                    if(page<500){
-                        page =page+1;
-                        pageStr = String.valueOf(page);
                         url = new URL(params[0]);
-                    }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
