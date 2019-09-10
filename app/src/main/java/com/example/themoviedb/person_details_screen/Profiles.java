@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.person_details_screen;
 
 public class Profiles {
     private String file_path;

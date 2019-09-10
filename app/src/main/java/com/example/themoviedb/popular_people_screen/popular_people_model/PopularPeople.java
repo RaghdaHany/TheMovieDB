@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.popular_people_screen.popular_people_model;
 
 import java.util.ArrayList;
 

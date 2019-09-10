@@ -1,7 +1,6 @@
-package com.example.themoviedb;
+package com.example.themoviedb.person_image_screen;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,20 +14,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+import com.example.themoviedb.popular_people_screen.LoadImage;
+import com.example.themoviedb.R;
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
+
 
 public class ImageActivity extends AppCompatActivity {
 
     ImageView personImage;
     Button saveImageBtn;
-
     String photo;
-    URL ImageUrl = null;
-    InputStream inputStream = null;
-    Bitmap bmImg = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

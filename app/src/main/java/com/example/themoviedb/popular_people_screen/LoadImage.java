@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.popular_people_screen;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,12 +7,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.themoviedb.R;
+
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class LoadImage extends AsyncTask<String, Void, Bitmap> {
+public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 
     private final WeakReference<ImageView> imageViewReference;
 

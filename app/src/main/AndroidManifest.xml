@@ -12,11 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ImageActivity"></activity>
-        <activity android:name=".PersonDetailsActivity" />
-        <activity android:name=".PopularPeopleActivity" />
-        <activity android:name=".OkHttpActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".person_image_screen.ImageActivity"></activity>
+        <activity android:name=".person_details_screen.PersonDetailsActivity" />
+
+        <activity android:name=".others.OkHttpActivity" />
+        <activity android:name=".popular_people_screen.popular_people_view.PopularPeopleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

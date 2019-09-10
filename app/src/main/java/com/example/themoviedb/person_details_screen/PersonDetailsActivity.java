@@ -1,24 +1,18 @@
-package com.example.themoviedb;
+package com.example.themoviedb.person_details_screen;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.themoviedb.memory_cache.ImageLoader;
+import com.example.themoviedb.popular_people_screen.LoadImage;
+import com.example.themoviedb.R;
+import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +26,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import static com.example.themoviedb.PopularPeopleActivity.CONNECTION_TIMEOUT;
-import static com.example.themoviedb.PopularPeopleActivity.READ_TIMEOUT;
 
 public class PersonDetailsActivity extends AppCompatActivity {
 

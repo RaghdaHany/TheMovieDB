@@ -1,15 +1,15 @@
-package com.example.themoviedb;
+package com.example.themoviedb.others;
 
 import java.util.ArrayList;
 
-public class PeopleKnownForPojo {
+public class Movie {
 
     int id ;
     String original_tiltle ;
     Double popularity;
     Double vote_count ;
     boolean adult ;
-    ArrayList<Integer> genre_ids ;
+    ArrayList<Integer> genres_id ;
     String original_language ;
     boolean video ;
     String poster_path;
@@ -18,7 +18,5 @@ public class PeopleKnownForPojo {
     Double vote_average ;
     String overview ;
     String release_date ;
-    String media_type ;
-    String first_air_date ;
-    ArrayList <String> origin_country ;
+
 }

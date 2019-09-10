@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.others;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.themoviedb.R;
+import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;

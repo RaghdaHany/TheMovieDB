@@ -1,19 +1,19 @@
-package com.example.themoviedb;
+package com.example.themoviedb.person_details_screen;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.themoviedb.person_image_screen.ImageActivity;
+import com.example.themoviedb.popular_people_screen.LoadImage;
+import com.example.themoviedb.R;
+
 import java.util.ArrayList;
 
 

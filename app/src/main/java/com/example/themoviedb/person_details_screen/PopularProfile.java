@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.person_details_screen;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
-package com.example.themoviedb;
+package com.example.themoviedb.popular_people_screen.popular_people_view;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,17 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.themoviedb.memory_cache.ImageLoader;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.example.themoviedb.R;
+import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -244,10 +240,10 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                     JSONObject json_data = jArray.getJSONObject(i);
                     PopularPeople person = new PopularPeople();
 
-                    person.name= json_data.getString("name");
-                    person.known_for_department= json_data.getString("known_for_department");
-                    person.profile_path = json_data.getString("profile_path");
-                    person.id = json_data.getInt("id");
+                    person.setName(json_data.getString("name"));
+                    person.setKnown_for_department(json_data.getString("known_for_department"));
+                    person.setProfile_path(json_data.getString("profile_path"));
+                    person.setId(json_data.getInt("id"));
 
                     popularPeopleList.add(person);
                 }
