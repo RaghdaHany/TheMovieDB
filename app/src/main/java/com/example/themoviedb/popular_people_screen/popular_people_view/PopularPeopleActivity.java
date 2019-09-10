@@ -83,9 +83,13 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                popularPeopleList.clear();
-                popularPeopleAdapter.notifyDataSetChanged();
-//                isSearchAction = true;
+                int size = popularPeopleList.size();
+                if (size > 0) {
+                    for (int i = 0; i < size; i++) {
+                        popularPeopleList.remove(0);
+                    }
+                    popularPeopleAdapter.notifyItemRangeRemoved(0, size);
+                }
                 if (isSearchAction) {
                     searchPage=1;
                     searchPageStr = String.valueOf(searchPage);
@@ -96,8 +100,6 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                     pageStr = String.valueOf(page);
                     new AsyncFetch().execute(data_url+pageStr);
                 }
-                recyclerView.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -146,9 +148,17 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     public boolean onQueryTextSubmit(String s) {
         searchstr = s;
         if(!s.equals("")) {
+            int size = popularPeopleList.size();
+            if (size > 0) {
+                for (int i = 0; i < size; i++) {
+                    popularPeopleList.remove(0);
+                }
+                popularPeopleAdapter.notifyItemRangeRemoved(0, size);
+            }
             isSearchAction = true;
-            popularPeopleList.clear();
-            new AsyncFetch().execute(search_url + searchstr);
+            searchPage = 1 ;
+            searchPageStr = String.valueOf(searchPage);
+            new AsyncFetch().execute(search_url + searchstr + "&page="+searchPageStr);
         }
         searchView.clearFocus();
         return true;
@@ -259,6 +269,4 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         }
 
     }
-
-
 }
