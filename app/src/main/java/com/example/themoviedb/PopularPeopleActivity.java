@@ -111,11 +111,10 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                 currentItems = layoutManager.getChildCount();
                 scrollingOutItems = layoutManager.findFirstVisibleItemPosition();
                 totalItems = layoutManager.getItemCount();
-                isSearchAction = false;
                 if (isScrolling && (currentItems + scrollingOutItems == totalItems)) {
                     isScrolling = false;
                     progressBar.setVisibility(View.VISIBLE);
-                    if (!isSearchAction) {
+                    if (isSearchAction) {
                         new AsyncFetch().execute(search_url+searchstr);
                     }
                     else {
@@ -151,6 +150,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     @Override
     public boolean onQueryTextChange(String s) {
         if (searchView.getQuery().length() == 0) {
+            isSearchAction = false;
             popularPeopleList.clear();
             searchView.clearFocus();
             new AsyncFetch().execute(data_url);
