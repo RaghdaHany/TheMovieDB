@@ -34,7 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener {
+public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener{
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -43,7 +43,8 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     public int  page = 0 ;
     String search_url;
     String data_url;
-    private String search_str="";
+    private Boolean isSearchAction= false;
+    private String searchstr = "";
     private String pageStr="";
 
     private RecyclerView recyclerView;
@@ -71,6 +72,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         data_url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page="+pageStr;
         search_url = "https://api.themoviedb.org/3/search/person?api_key=e6f20f39139b1f5a2be132cbaaa9ce43&query=";
 
+//        isSearchAction = false;
         new AsyncFetch().execute(data_url);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
@@ -82,12 +84,18 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                new AsyncFetch().execute();
+                popularPeopleList.clear();
+                popularPeopleAdapter.notifyDataSetChanged();
+//                isSearchAction = true;
+                if (isSearchAction) {
+                    new AsyncFetch().execute(search_url+searchstr);
+                }
+                else {
+                    new AsyncFetch().execute(data_url);
+                }
                 recyclerView.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
-
             }
         });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -103,10 +111,16 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                 currentItems = layoutManager.getChildCount();
                 scrollingOutItems = layoutManager.findFirstVisibleItemPosition();
                 totalItems = layoutManager.getItemCount();
-                if (isScrolling && (currentItems + scrollingOutItems == totalItems)){
-                    isScrolling = false ;
-                        progressBar.setVisibility(View.VISIBLE);
+                isSearchAction = false;
+                if (isScrolling && (currentItems + scrollingOutItems == totalItems)) {
+                    isScrolling = false;
+                    progressBar.setVisibility(View.VISIBLE);
+                    if (!isSearchAction) {
+                        new AsyncFetch().execute(search_url+searchstr);
+                    }
+                    else {
                         new AsyncFetch().execute(data_url);
+                    }
                 }
             }
         });
@@ -124,9 +138,11 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+        searchstr = s;
         if(!s.equals("")) {
+            isSearchAction = true;
             popularPeopleList.clear();
-            new AsyncFetch().execute(search_url + s);
+            new AsyncFetch().execute(search_url + searchstr);
         }
         searchView.clearFocus();
         return true;
