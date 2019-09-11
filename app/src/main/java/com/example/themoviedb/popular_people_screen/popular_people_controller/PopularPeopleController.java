@@ -1,14 +1,15 @@
 package com.example.themoviedb.popular_people_screen.popular_people_controller;
 
 import com.example.themoviedb.others.Utilities;
-import com.example.themoviedb.popular_people_screen.popular_people_model.AsyncFetch;
+import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
+import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleActivity;
 
 public class PopularPeopleController {
 
     PopularPeopleActivity popularPeopleActivity;
-    AsyncFetch asyncFetch = new AsyncFetch(this);
+    PopularPeopleModel popularPeopleModel = new PopularPeopleModel(this);
     Utilities utilities = new Utilities();
     String urlString ;
     String pageStr = "";
@@ -16,25 +17,25 @@ public class PopularPeopleController {
 
 
 
-    public PopularPeopleController(PopularPeopleActivity popularPeopleActivity, AsyncFetch asyncFetch) {
+    public PopularPeopleController(PopularPeopleActivity popularPeopleActivity, PopularPeopleModel popularPeopleModel) {
         this.popularPeopleActivity = popularPeopleActivity;
-        asyncFetch.setModel(this);
-        this.asyncFetch = asyncFetch;
+        popularPeopleModel.setModel(this);
+        this.popularPeopleModel = popularPeopleModel;
     }
 
     public PopularPeopleController(PopularPeopleActivity popularPeopleActivity) {
         this.popularPeopleActivity = popularPeopleActivity;
-        asyncFetch.setModel(this);
-        this.asyncFetch = asyncFetch;
+        popularPeopleModel.setModel(this);
+        this.popularPeopleModel = popularPeopleModel;
     }
 
-    public PopularPeopleController(AsyncFetch asyncFetch) {
-        this.asyncFetch = asyncFetch;
+    public PopularPeopleController(PopularPeopleModel asyncFetch) {
+        this.popularPeopleModel = asyncFetch;
     }
 
     public void callFetchingData(String s) {
         urlString = s ;
-        asyncFetch.startFetching (s);
+        popularPeopleModel.startFetching (s);
 //        asyncFetch.execute(s);
     }
 
