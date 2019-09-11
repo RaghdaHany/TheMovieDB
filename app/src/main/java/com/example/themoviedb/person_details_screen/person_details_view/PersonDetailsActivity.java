@@ -10,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.themoviedb.person_details_screen.person_details_model.GridAdapter;
+import com.example.themoviedb.others.Utilities;
+import com.example.themoviedb.person_details_screen.person_details_controller.PersonDetailsController;
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
 import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
@@ -43,8 +44,10 @@ public class PersonDetailsActivity extends AppCompatActivity {
     ArrayList<Profiles> profiles ;
     GridAdapter adapter ;
     int id ;
-
     LinearLayoutManager layoutManager;
+    PersonDetailsController personDetailsController ;
+    Utilities utilities ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,103 +57,27 @@ public class PersonDetailsActivity extends AppCompatActivity {
         personName = findViewById(R.id.nameTextViewId);
         personDep = findViewById(R.id.departmentTextViewId);
         personAdult = findViewById(R.id.adultTextViewId);
-
-        Intent i = getIntent();
-        String name = i.getStringExtra("person_name");
-        String dep = i.getStringExtra("person_department");
-        id = i.getIntExtra("id", 1);
-
-        boolean adult = i.getBooleanExtra("person_adult", true);
-        String adultStr = new Boolean(adult).toString();
-
-        String photo_first_path = "https://image.tmdb.org/t/p/w500/";
-        String profile_path = i.getStringExtra("profile_path");
-        new LoadImage(personImage).execute(photo_first_path + profile_path);
-
-        personName.setText(name);
-        personDep.setText(dep);
-        personAdult.setText("adult : " + adultStr);
-
-        Intent intent = getIntent();
-        String profile = intent.getStringExtra("profile_path");
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new GridLayoutManager(this ,3 );
         profiles = new ArrayList<>();
         adapter = new GridAdapter(profiles, PersonDetailsActivity.this);
         recyclerView.setAdapter(adapter);
+        personDetailsController = new PersonDetailsController(this );
+        utilities = new Utilities();
 
+        popularPeople = personDetailsController.getPersonDetails();
+        String adultStr = new Boolean(popularPeople.isAdult()).toString();
 
-        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
+        new LoadImage(personImage).execute(utilities.photo_first_path + popularPeople.getProfile_path());
+        personName.setText(popularPeople.getName());
+        personDep.setText(popularPeople.getKnown_for_department());
+        personAdult.setText("adult : " + adultStr);
+
+//        Intent intent = getIntent();
+//        String profile = intent.getStringExtra("profile_path");
+
+//        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
     }
 
-    public class getPhotos extends AsyncTask<String, String, String> {
 
-        HttpURLConnection httpURLConnection = null;
-        URL url = null ;
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            BufferedReader reader = null;
-
-            try {
-                url = new URL(urls[0]);
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.connect();
-
-                InputStream stream = httpURLConnection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuffer buffer = new StringBuffer();
-
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-                return buffer.toString();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            finally {
-                if (httpURLConnection != null)
-                    httpURLConnection.disconnect();
-                try {
-                    if (reader != null)
-                        reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            try {
-
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jsonArray = jsonObject.getJSONArray("profiles");
-
-                for (int i = 0; i< jsonArray.length(); i++) {
-
-                    JSONObject profileResult = jsonArray.getJSONObject(i);
-                    Profiles personProfile = new Profiles();
-                    personProfile.setFile_path(profileResult.getString("file_path"));
-                    profiles.add(personProfile);
-                }
-
-                adapter.notifyDataSetChanged();
-                recyclerView.setLayoutManager(layoutManager);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
