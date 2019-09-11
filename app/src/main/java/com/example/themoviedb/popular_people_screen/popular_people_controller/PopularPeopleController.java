@@ -3,13 +3,13 @@ package com.example.themoviedb.popular_people_screen.popular_people_controller;
 import com.example.themoviedb.others.Utilities;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
-import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleActivity;
 
 public class PopularPeopleController {
 
     PopularPeopleActivity popularPeopleActivity;
     PopularPeopleModel popularPeopleModel = new PopularPeopleModel(this);
+
     Utilities utilities = new Utilities();
     String urlString ;
     String pageStr = "";
@@ -74,5 +74,6 @@ public class PopularPeopleController {
             callFetchingData(utilities.popularPeopleURL + pageStr);
         }
     }
+
 }
 

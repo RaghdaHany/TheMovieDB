@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.themoviedb.person_details_screen.PersonDetailsActivity;
+import com.example.themoviedb.person_details_screen.person_details_view.PersonDetailsActivity;
 import com.example.themoviedb.R;
 import com.example.themoviedb.memory_cache.ImageLoader;
 import com.example.themoviedb.popular_people_screen.LoadImage;
+import com.example.themoviedb.popular_people_screen.popular_people_controller.PopularPeopleController;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 
 import java.util.Collections;
@@ -26,6 +27,7 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
     private LayoutInflater inflater;
     private PopularPeople currentPopularPeople;
     private int currentPos = 0 ;
+    PopularPeopleController popularPeopleController;
 
     public PopularPeopleAdapter(Context context, List<PopularPeople> popularPeopleList) {
         this.context = context;
@@ -80,6 +82,7 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    popularPeopleController.startDetailsActivity();
                     Intent intent = new Intent(context, PersonDetailsActivity.class);
                     intent.putExtra("person_name", popularPeople.getName());
                     intent.putExtra("person_department", popularPeople.getKnown_for_department());
@@ -88,6 +91,7 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
                     intent.putExtra("profile_path" , popularPeople.getProfile_path());
                     intent.putExtra("person_id" , popularPeople.getId());
                     context.startActivity(intent);
+
                 }
             });
 

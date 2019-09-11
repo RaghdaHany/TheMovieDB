@@ -1,4 +1,4 @@
-package com.example.themoviedb.person_details_screen;
+package com.example.themoviedb.person_details_screen.person_details_model;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.themoviedb.person_image_screen.ImageActivity;
+import com.example.themoviedb.person_image_screen.person_image_view.ImageActivity;
 import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
 

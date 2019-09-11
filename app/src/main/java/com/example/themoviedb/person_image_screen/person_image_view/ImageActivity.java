@@ -1,4 +1,4 @@
-package com.example.themoviedb.person_image_screen;
+package com.example.themoviedb.person_image_screen.person_image_view;
 
 import android.Manifest;
 import android.content.Intent;
