@@ -32,6 +32,9 @@ public class AsyncFetch extends AsyncTask<String, String, String> {
     public void setModel(PopularPeopleController popularPeopleController) {
         this.popularPeopleController = popularPeopleController;
     }
+    public AsyncFetch(PopularPeopleController popularPeopleController) {
+        this.popularPeopleController = popularPeopleController;
+    }
 
     HttpURLConnection conn;
     URL url = null;
@@ -125,6 +128,7 @@ public class AsyncFetch extends AsyncTask<String, String, String> {
     }
 
     public void startFetching(String s) {
-        new AsyncFetch().execute(s);
+
+        new AsyncFetch(popularPeopleController).execute(s);
     }
 }

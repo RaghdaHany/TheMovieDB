@@ -79,57 +79,42 @@ public class PopularPeopleActivity extends AppCompatActivity
         utilities = new Utilities();
         pageStr = String.valueOf(page);
         popularPeopleController = new PopularPeopleController(this);
-        popularPeopleController.callFetchingData (data_url+pageStr);
+        popularPeopleController.callFetchingData (utilities.popularPeopleURL+pageStr);
 
-//        new AsyncFetch().execute(data_url);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-//        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
-//                android.R.color.holo_green_dark,
-//                android.R.color.holo_orange_dark,
-//                android.R.color.holo_blue_dark);
-//
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                int size = popularPeopleList.size();
-//                if (size > 0) {
-//                    for (int i = 0; i < size; i++) {
-//                        popularPeopleList.remove(0);
-//                    }
-//                    popularPeopleAdapter.notifyItemRangeRemoved(0, size);
-//                }
-//                if (isSearchAction) {
-//                    searchPage=1;
-//                    searchPageStr = String.valueOf(searchPage);
-//                    new AsyncFetch().execute(search_url+searchstr+"&page="+searchPageStr);
-//                }
-//                else {
-//                    page=1;
-//                    pageStr = String.valueOf(page);
-//                    new AsyncFetch().execute(data_url+pageStr);
-//                }
-//                mSwipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+              popularPeopleController.callSwipeFun ();
+              mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         ////////////////////////////////////////////////////////////////////////////////////
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                isScrolling = true ;
-//            }
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                currentItems = layoutManager.getChildCount();
-//                scrollingOutItems = layoutManager.findFirstVisibleItemPosition();
-//                totalItems = layoutManager.getItemCount();
-//                if (isScrolling && (currentItems + scrollingOutItems == totalItems)) {
-//                    isScrolling = false;
-//                    progressBar.setVisibility(View.VISIBLE);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                isScrolling = true ;
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                currentItems = layoutManager.getChildCount();
+                scrollingOutItems = layoutManager.findFirstVisibleItemPosition();
+                totalItems = layoutManager.getItemCount();
+                if (isScrolling && (currentItems + scrollingOutItems == totalItems)) {
+                    isScrolling = false;
+                    progressBar.setVisibility(View.VISIBLE);
+                    popularPeopleController.callScrollingFun();
 //                    if (isSearchAction) {
 //                        searchPage = searchPage + 1;
 //                        searchPageStr = String.valueOf(searchPage);
@@ -140,9 +125,9 @@ public class PopularPeopleActivity extends AppCompatActivity
 //                        pageStr = String.valueOf(page);
 //                        new AsyncFetch().execute(data_url+pageStr);
 //                    }
-//                }
-//            }
-//        });
+                }
+            }
+        });
     }
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -194,5 +179,15 @@ public class PopularPeopleActivity extends AppCompatActivity
     public void settingAdapterInList() {
         popularPeopleAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    public void clearList() {
+        int size = popularPeopleList.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                popularPeopleList.remove(0);
+            }
+            popularPeopleAdapter.notifyItemRangeRemoved(0, size);
+        }
     }
 }
