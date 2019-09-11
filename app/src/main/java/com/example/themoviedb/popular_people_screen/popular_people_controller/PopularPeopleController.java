@@ -10,7 +10,10 @@ public class PopularPeopleController {
     PopularPeopleActivity popularPeopleActivity;
     AsyncFetch asyncFetch = new AsyncFetch(this);
     Utilities utilities = new Utilities();
+    String urlString ;
     String pageStr = "";
+    String searchPageStr = "";
+
 
 
     public PopularPeopleController(PopularPeopleActivity popularPeopleActivity, AsyncFetch asyncFetch) {
@@ -30,6 +33,7 @@ public class PopularPeopleController {
     }
 
     public void callFetchingData(String s) {
+        urlString = s ;
         asyncFetch.startFetching (s);
 //        asyncFetch.execute(s);
     }
@@ -45,24 +49,29 @@ public class PopularPeopleController {
 
     public void callSwipeFun() {
 
-        popularPeopleActivity.clearList ();
-        callFetchingData(utilities.popularPeopleURL + utilities.firstPage);
-//        if (isSearchAction) {
-//            searchPage=1;
-//            searchPageStr = String.valueOf(searchPage);
-//            new AsyncFetch().execute(search_url+searchstr+"&page="+searchPageStr);
-//        }
-//        else {
-//            page=1;
-//            pageStr = String.valueOf(page);
-//            new AsyncFetch().execute(data_url+pageStr);
+        popularPeopleActivity.clearList();
+        if (popularPeopleActivity.isSearchAction) {
+            callFetchingData(urlString + utilities.pageURL + utilities.firstPage );
+            utilities.searchPage = 1 ;
+
+        } else {
+            callFetchingData(utilities.popularPeopleURL + utilities.firstPage);
+            utilities.popularPeoplePage = 1 ;
         }
-
+    }
     public void callScrollingFun() {
-        utilities.page = utilities.page + 1 ;
-        pageStr = String.valueOf(utilities.page);
-        callFetchingData(utilities.popularPeopleURL + pageStr);
 
+
+        if (popularPeopleActivity.isSearchAction) {
+            utilities.searchPage = utilities.searchPage + 1 ;
+            searchPageStr = String.valueOf(utilities.searchPage);
+            callFetchingData(urlString + utilities.pageURL + searchPageStr);
+
+        } else {
+            utilities.popularPeoplePage = utilities.popularPeoplePage + 1 ;
+            pageStr = String.valueOf(utilities.popularPeoplePage);
+            callFetchingData(utilities.popularPeopleURL + pageStr);
+        }
     }
 }
 

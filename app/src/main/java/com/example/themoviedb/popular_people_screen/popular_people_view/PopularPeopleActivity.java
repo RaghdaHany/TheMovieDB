@@ -33,9 +33,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularPeopleActivity extends AppCompatActivity
-//        implements android.widget.SearchView.OnQueryTextListener
-{
+public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener {
 
     Boolean isScrolling = false ;
     int currentItems , totalItems , scrollingOutItems ;
@@ -50,7 +48,7 @@ public class PopularPeopleActivity extends AppCompatActivity
 
     String search_url;
     String data_url;
-    private Boolean isSearchAction= false;
+    public Boolean isSearchAction= false;
     private String searchstr = "";
     private String pageStr="";
     MenuItem menuItem;
@@ -73,9 +71,6 @@ public class PopularPeopleActivity extends AppCompatActivity
         recyclerView.setAdapter(popularPeopleAdapter);
 
         pageStr = String.valueOf(page);
-        data_url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43"+"&"+"page=";
-        search_url = "https://api.themoviedb.org/3/search/person?api_key=e6f20f39139b1f5a2be132cbaaa9ce43&query=";
-
         utilities = new Utilities();
         pageStr = String.valueOf(page);
         popularPeopleController = new PopularPeopleController(this);
@@ -131,47 +126,41 @@ public class PopularPeopleActivity extends AppCompatActivity
     }
 ////////////////////////////////////////////////////////////////////////////////////////
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.my_menu, menu);
-//        menuItem = menu.findItem(R.id.search_btn);
-//        searchView = (android.widget.SearchView) menuItem.getActionView();
-//        searchView.setOnQueryTextListener(this);
-//        searchView.clearFocus();
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    @Override
-//    public boolean onQueryTextSubmit(String s) {
-//        searchstr = s;
-//        if(!s.equals("")) {
-//            int size = popularPeopleList.size();
-//            if (size > 0) {
-//                for (int i = 0; i < size; i++) {
-//                    popularPeopleList.remove(0);
-//                }
-//                popularPeopleAdapter.notifyItemRangeRemoved(0, size);
-//            }
-//            isSearchAction = true;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        menuItem = menu.findItem(R.id.search_btn);
+        searchView = (android.widget.SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.clearFocus();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        if (searchView.getQuery().length() == 0) {
+            isSearchAction = false;
+            popularPeopleList.clear();
+            searchView.clearFocus();
+            popularPeopleController.callFetchingData (utilities.popularPeopleURL+pageStr);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        searchstr = s;
+        if(!s.equals("")) {
+           this.clearList();
+            isSearchAction = true;
 //            searchPage = 1 ;
 //            searchPageStr = String.valueOf(searchPage);
-//            new AsyncFetch().execute(search_url + searchstr + "&page="+searchPageStr);
-//        }
-//        searchView.clearFocus();
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextChange(String s) {
-//        if (searchView.getQuery().length() == 0) {
-//            isSearchAction = false;
-//            popularPeopleList.clear();
-//            searchView.clearFocus();
-//            new AsyncFetch().execute(data_url);
-//        }
-//        return true;
-//    }
-//
+            popularPeopleController.callFetchingData (utilities.search_url + s);  ;
+        }
+        searchView.clearFocus();
+        return true;
+    }
+
     public void setPerson(PopularPeople person) {
         popularPeopleList.add(person);
     }
