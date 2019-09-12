@@ -1,6 +1,7 @@
 package com.example.themoviedb.person_details_screen.person_details_controller;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.example.themoviedb.person_details_screen.person_details_model.PersonDetailsModel;
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
@@ -20,21 +21,25 @@ public class PersonDetailsController {
     }
 
 
-    public void addPersonDetails(Profiles personDetails) {
-
+    public void addPersonImages(Profiles personImage) {
+        personDetailsActivity.setImage (personImage);
     }
 
     public void setAdapter() {
+        personDetailsActivity.setImagesInAdapter();
     }
 
     public PopularPeople getPersonDetails() {
 
+
         Intent i = personDetailsActivity.getIntent();
-        String name = i.getStringExtra("person_name");
-        String dep = i.getStringExtra("person_department");
-        int id = i.getIntExtra("id", 1);
-        boolean adult = i.getBooleanExtra("person_adult", true);
-        String profile_path = i.getStringExtra("profile_path");
+        Bundle extras = i.getExtras();
+
+        String name = extras.getString("person_name");
+        String dep = extras.getString("person_department");
+        int id = extras.getInt("person_id", 1);
+        boolean adult = extras.getBoolean("person_adult", true);
+        String profile_path = extras.getString("profile_path");
 
         popularPeople.setName(name);
         popularPeople.setId(id);
@@ -43,5 +48,10 @@ public class PersonDetailsController {
         popularPeople.setProfile_path(profile_path);
 
         return popularPeople;
+    }
+
+    public void fetchPersonImage(String s) {
+        personDetailsModel.startFetchingImage(s);
+
     }
 }

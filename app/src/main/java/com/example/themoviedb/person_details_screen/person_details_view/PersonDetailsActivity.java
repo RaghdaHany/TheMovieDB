@@ -43,7 +43,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     ArrayList<Profiles> profiles ;
     GridAdapter adapter ;
-    int id ;
+    int id = 0 ;
     LinearLayoutManager layoutManager;
     PersonDetailsController personDetailsController ;
     Utilities utilities ;
@@ -72,12 +72,21 @@ public class PersonDetailsActivity extends AppCompatActivity {
         personName.setText(popularPeople.getName());
         personDep.setText(popularPeople.getKnown_for_department());
         personAdult.setText("adult : " + adultStr);
-
+        id = popularPeople.getId();
 //        Intent intent = getIntent();
 //        String profile = intent.getStringExtra("profile_path");
 
+        personDetailsController.fetchPersonImage(utilities.photo_first_path + id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
 //        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
     }
 
 
+    public void setImage(Profiles personImage) {
+        profiles.add(personImage);
+    }
+
+    public void setImagesInAdapter() {
+        adapter.notifyDataSetChanged();
+        recyclerView.setLayoutManager(layoutManager);
+    }
 }

@@ -82,9 +82,9 @@ public class PersonDetailsModel {
                 for (int i = 0; i< jsonArray.length(); i++) {
 
                     JSONObject profileResult = jsonArray.getJSONObject(i);
-                    Profiles personDetails = new Profiles();
-                    personDetails.setFile_path(profileResult.getString("file_path"));
-                    personDetailsController.addPersonDetails(personDetails);
+                    Profiles personImage = new Profiles();
+                    personImage.setFile_path(profileResult.getString("file_path"));
+                    personDetailsController.addPersonImages(personImage);
                 }
 
                     personDetailsController.setAdapter();
@@ -95,5 +95,9 @@ public class PersonDetailsModel {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void startFetchingImage(String s) {
+        new getPhotos().execute(s);
     }
 }
