@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.themoviedb.person_image_screen.person_image_controller.PersonImageController;
 import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
 import java.io.File;
@@ -24,7 +26,7 @@ public class ImageActivity extends AppCompatActivity {
     ImageView personImage;
     Button saveImageBtn;
     String photo;
-
+    PersonImageController personImageController ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,38 +34,27 @@ public class ImageActivity extends AppCompatActivity {
 
         personImage = findViewById(R.id.imageid);
         saveImageBtn = findViewById(R.id.saveImageBtn);
+        personImageController = new PersonImageController(this );
+
+        personImageController.getPicturePath ();
 
 
-
-        Intent intent = getIntent();
-        photo = intent.getStringExtra("picture_path");
-
-        new LoadImage(personImage).execute(photo);
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(ImageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                }
-                else {
-                    ActivityCompat.requestPermissions(ImageActivity.this, new String[]
-                            { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
-                }
-                saveImage();
+
+                personImageController.getPermission ();
             }
         });
     }
 
-    private void saveImage(){
+    public void sendPhotoStringToActivity(String photo) {
+        new LoadImage(personImage).execute(photo);
+    }
+
+    public void savePhoto() {
         personImage.setDrawingCacheEnabled(true);
         Bitmap b = personImage.getDrawingCache();
         MediaStore.Images.Media.insertImage(getContentResolver(), b, photo, "");
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(photo);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-        Toast.makeText(ImageActivity.this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
     }
 }

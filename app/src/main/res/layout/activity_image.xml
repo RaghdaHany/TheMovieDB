@@ -10,16 +10,17 @@
     <ImageView
         android:id="@+id/imageid"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="500dp"
+        android:scaleType="fitXY"/>
 
     <Button
         android:id="@+id/saveImageBtn"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:foregroundGravity="bottom"
         android:text="Save Image"
         android:textSize="18sp"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center"/>
+        android:gravity="bottom" />
 
 </LinearLayout>
