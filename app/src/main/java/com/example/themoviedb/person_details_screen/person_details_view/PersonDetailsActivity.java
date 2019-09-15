@@ -17,17 +17,6 @@ import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class PersonDetailsActivity extends AppCompatActivity {
@@ -76,12 +65,13 @@ public class PersonDetailsActivity extends AppCompatActivity {
 //        Intent intent = getIntent();
 //        String profile = intent.getStringExtra("profile_path");
 
-        personDetailsController.fetchPersonImage(utilities.photo_first_path + id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
+        personDetailsController.fetchPersonImage("https://api.themoviedb.org/3/person/"+ id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
 //        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
     }
 
 
-    public void setImage(Profiles personImage) {
+    public void setImage(Profiles personImage)
+    {
         profiles.add(personImage);
     }
 

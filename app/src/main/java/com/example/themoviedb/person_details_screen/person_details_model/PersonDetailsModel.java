@@ -98,6 +98,7 @@ public class PersonDetailsModel {
     }
 
     public void startFetchingImage(String s) {
+
         new getPhotos().execute(s);
     }
 }

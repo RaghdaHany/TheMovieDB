@@ -33,6 +33,8 @@ public class ImageActivity extends AppCompatActivity {
         personImage = findViewById(R.id.imageid);
         saveImageBtn = findViewById(R.id.saveImageBtn);
 
+
+
         Intent intent = getIntent();
         photo = intent.getStringExtra("picture_path");
 
