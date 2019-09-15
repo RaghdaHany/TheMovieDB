@@ -1,24 +1,16 @@
 package com.example.themoviedb.person_image_screen.person_image_view;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.themoviedb.person_image_screen.person_image_controller.PersonImageController;
-import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
-import java.io.File;
+import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
 
 
 public class ImageActivity extends AppCompatActivity {

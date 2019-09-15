@@ -1,7 +1,5 @@
 package com.example.themoviedb.person_details_screen.person_details_view;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,9 +11,9 @@ import android.widget.TextView;
 import com.example.themoviedb.others.Utilities;
 import com.example.themoviedb.person_details_screen.person_details_controller.PersonDetailsController;
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
-import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
+import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
 
 import java.util.ArrayList;
 

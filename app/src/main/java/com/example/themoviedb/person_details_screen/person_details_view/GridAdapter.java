@@ -12,8 +12,8 @@ import android.widget.ImageView;
 
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
 import com.example.themoviedb.person_image_screen.person_image_view.ImageActivity;
-import com.example.themoviedb.popular_people_screen.LoadImage;
 import com.example.themoviedb.R;
+import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
 
 import java.util.ArrayList;
 

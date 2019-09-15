@@ -1,10 +1,15 @@
 package com.example.themoviedb.popular_people_screen.popular_people_model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_controller.PopularPeopleController;
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleActivity;
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleAdapter;
@@ -17,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +39,7 @@ public class PopularPeopleModel {
     public void setModel(PopularPeopleController popularPeopleController) {
         this.popularPeopleController = popularPeopleController;
     }
+
     public PopularPeopleModel(PopularPeopleController popularPeopleController) {
         this.popularPeopleController = popularPeopleController;
     }
@@ -130,15 +137,72 @@ public class PopularPeopleModel {
 
         }
     }
+
     public void startFetching(String s) {
 
         new AsyncFetch().execute(s);
     }
 
-    public class LoadImage extends AsyncTask<String, Void, Bitmap> {
+    public class ImageLoaderModel extends AsyncTask<String, Void, Bitmap> {
+
+        private final WeakReference<ImageView> imageViewReference;
+
+        public ImageLoaderModel(ImageView imageView) {
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
+        protected Bitmap doInBackground(String... params) {
+            try {
+                return downloadBitmap(params[0]);
+            } catch (Exception e) {
+                // log error
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled()) {
+                bitmap = null;
+            }
+
+            if (imageViewReference != null) {
+                ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+                        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.ic_launcher_background);
+                        imageView.setImageDrawable(placeholder);
+                    }
+                }
+            }
+        }
+
+        private Bitmap downloadBitmap(String url) {
+            HttpURLConnection urlConnection = null;
+            try {
+                URL uri = new URL(url);
+                urlConnection = (HttpURLConnection) uri.openConnection();
+                int statusCode = urlConnection.getResponseCode();
+                if (statusCode != HttpURLConnection.HTTP_OK) {
+                    return null;
+                }
+
+                InputStream inputStream = urlConnection.getInputStream();
+                if (inputStream != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    return bitmap;
+                }
+            } catch (Exception e) {
+                urlConnection.disconnect();
+                Log.w("ImageDownloader", "Error downloading image from " + url);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
             return null;
         }
     }
