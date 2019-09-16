@@ -1,18 +1,7 @@
 package com.example.themoviedb.popular_people_screen.popular_people_model;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.example.themoviedb.R;
-import com.example.themoviedb.popular_people_screen.popular_people_controller.PopularPeopleController;
-import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleActivity;
-import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleAdapter;
+import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,26 +11,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
-public class PopularPeopleModel {
+public class PopularPeopleModel implements PopularPeopleModelInterface {
     private static final int CONNECTION_TIMEOUT = 10000;
     private static final int READ_TIMEOUT = 15000;
-    List<PopularPeople> popularPeopleList;
-    private RecyclerView recyclerView;
-    private PopularPeopleAdapter popularPeopleAdapter;
-    PopularPeopleController popularPeopleController;
+    PopularPeoplePresenter popularPeoplePresenter;
 
-    public void setModel(PopularPeopleController popularPeopleController) {
-        this.popularPeopleController = popularPeopleController;
-    }
-
-    public PopularPeopleModel(PopularPeopleController popularPeopleController) {
-        this.popularPeopleController = popularPeopleController;
+    public void setModel(PopularPeoplePresenter popularPeoplePresenter) {
+        this.popularPeoplePresenter = popularPeoplePresenter;
     }
 
     public class AsyncFetch extends AsyncTask<String, String, String> {
@@ -123,23 +103,18 @@ public class PopularPeopleModel {
                     person.setProfile_path(json_data.getString("profile_path"));
                     person.setId(json_data.getInt("id"));
 
-                    popularPeopleController.addingPerson(person);
+                    popularPeoplePresenter.addingPerson(person);
                 }
 
-                popularPeopleController.settingAdapter();
-//            // Setup and Handover data to recyclerview
-//            popularPeopleAdapter.notifyDataSetChanged();
-//            recyclerView.setLayoutManager(layoutManager);
+                popularPeoplePresenter.settingAdapter();
 
             } catch (JSONException e) {
-//            Toast.makeText(PopularPeopleActivity.this, e.toString(), Toast.LENGTH_LONG).show();
             }
 
         }
     }
 
     public void startFetching(String s) {
-
         new AsyncFetch().execute(s);
     }
 }

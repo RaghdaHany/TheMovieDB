@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.themoviedb.others.Utilities;
-import com.example.themoviedb.person_details_screen.person_details_controller.PersonDetailsController;
+import com.example.themoviedb.person_details_screen.person_details_model.PersonDetailsModel;
+import com.example.themoviedb.person_details_screen.person_details_presenter.PersonDetailsPresenter;
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
@@ -17,10 +18,7 @@ import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImag
 
 import java.util.ArrayList;
 
-public class PersonDetailsActivity extends AppCompatActivity {
-
-    public static final int CONNECTION_TIMEOUT = 10000;
-    public static final int READ_TIMEOUT = 15000;
+public class PersonDetailsActivity extends AppCompatActivity implements PersonDetailsViewInterface{
 
     PopularPeople popularPeople;
     ImageView personImage;
@@ -32,7 +30,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
     GridAdapter adapter ;
     int id = 0 ;
     LinearLayoutManager layoutManager;
-    PersonDetailsController personDetailsController ;
+    PersonDetailsPresenter personDetailsPresenter ;
     Utilities utilities ;
 
     @Override
@@ -49,10 +47,10 @@ public class PersonDetailsActivity extends AppCompatActivity {
         profiles = new ArrayList<>();
         adapter = new GridAdapter(profiles, PersonDetailsActivity.this);
         recyclerView.setAdapter(adapter);
-        personDetailsController = new PersonDetailsController(this );
+        personDetailsPresenter = new PersonDetailsPresenter(this , new PersonDetailsModel());
         utilities = new Utilities();
 
-        popularPeople = personDetailsController.getPersonDetails();
+        popularPeople = personDetailsPresenter.getPersonDetails();
         String adultStr = new Boolean(popularPeople.isAdult()).toString();
 
         new LoadImage(personImage).execute(utilities.photo_first_path + popularPeople.getProfile_path());
@@ -60,11 +58,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
         personDep.setText(popularPeople.getKnown_for_department());
         personAdult.setText("adult : " + adultStr);
         id = popularPeople.getId();
-//        Intent intent = getIntent();
-//        String profile = intent.getStringExtra("profile_path");
 
-        personDetailsController.fetchPersonImage("https://api.themoviedb.org/3/person/"+ id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
-//        new getPhotos().execute("https://api.themoviedb.org/3/person/" + id + "/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43");
+        personDetailsPresenter.fetchPersonImage("https://api.themoviedb.org/3/person/"+ id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
     }
 
 

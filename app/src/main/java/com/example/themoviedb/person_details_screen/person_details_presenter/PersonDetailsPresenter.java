@@ -1,38 +1,37 @@
-package com.example.themoviedb.person_details_screen.person_details_controller;
+package com.example.themoviedb.person_details_screen.person_details_presenter;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.themoviedb.person_details_screen.person_details_model.PersonDetailsModel;
+import com.example.themoviedb.person_details_screen.person_details_model.PersonDetailsModelInterface;
 import com.example.themoviedb.person_details_screen.person_details_model.Profiles;
-import com.example.themoviedb.person_details_screen.person_details_view.PersonDetailsActivity;
+import com.example.themoviedb.person_details_screen.person_details_view.PersonDetailsViewInterface;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 
-public class PersonDetailsController {
-    PersonDetailsActivity personDetailsActivity;
-    PersonDetailsModel personDetailsModel = new PersonDetailsModel(this);
+public class PersonDetailsPresenter {
+    PersonDetailsViewInterface personDetailsViewInterface;
+    PersonDetailsModelInterface personDetailsModelInterface ;
     PopularPeople popularPeople = new PopularPeople() ;
 
 
-    public PersonDetailsController(PersonDetailsActivity personDetailsActivity) {
-        this.personDetailsActivity = personDetailsActivity;
-        personDetailsModel.setModel(this);
-        this.personDetailsModel = personDetailsModel;
+    public PersonDetailsPresenter(PersonDetailsViewInterface personDetailsViewInterface, PersonDetailsModelInterface personDetailsModelInterface) {
+        this.personDetailsViewInterface = personDetailsViewInterface;
+        this.personDetailsModelInterface = personDetailsModelInterface;
+        personDetailsModelInterface.setModel(this);
+
     }
 
-
     public void addPersonImages(Profiles personImage) {
-        personDetailsActivity.setImage (personImage);
+        personDetailsViewInterface.setImage (personImage);
     }
 
     public void setAdapter() {
-        personDetailsActivity.setImagesInAdapter();
+        personDetailsViewInterface.setImagesInAdapter();
     }
 
     public PopularPeople getPersonDetails() {
 
-
-        Intent i = personDetailsActivity.getIntent();
+        Intent i = personDetailsViewInterface.getIntent();
         Bundle extras = i.getExtras();
 
         String name = extras.getString("person_name");
@@ -51,7 +50,7 @@ public class PersonDetailsController {
     }
 
     public void fetchPersonImage(String s) {
-        personDetailsModel.startFetchingImage(s);
+        personDetailsModelInterface.startFetchingImage(s);
 
     }
 }

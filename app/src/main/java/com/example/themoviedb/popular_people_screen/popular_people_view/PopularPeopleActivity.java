@@ -1,6 +1,5 @@
 package com.example.themoviedb.popular_people_screen.popular_people_view;
 
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,17 +10,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.themoviedb.R;
 import com.example.themoviedb.others.Utilities;
-import com.example.themoviedb.popular_people_screen.popular_people_controller.PopularPeopleController;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
+import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener {
+public class PopularPeopleActivity extends AppCompatActivity implements android.widget.SearchView.OnQueryTextListener , PopularPeopleViewInterface {
 
     Boolean isScrolling = false ;
     int currentItems , totalItems , scrollingOutItems ;
@@ -43,7 +41,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
 
     int searchPage = 1;
     String searchPageStr="";
-    PopularPeopleController popularPeopleController ;
+    PopularPeoplePresenter popularPeoplePresenter ;
     Utilities utilities;
 
     @Override
@@ -61,8 +59,8 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         pageStr = String.valueOf(page);
         utilities = new Utilities();
         pageStr = String.valueOf(page);
-        popularPeopleController = new PopularPeopleController(this);
-        popularPeopleController.callFetchingData (utilities.popularPeopleURL+pageStr);
+        popularPeoplePresenter = new PopularPeoplePresenter(this , new PopularPeopleModel());
+        popularPeoplePresenter.callFetchingData (utilities.popularPeopleURL+pageStr);
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -75,7 +73,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-              popularPeopleController.callSwipeFun ();
+                popularPeoplePresenter.callSwipeFun ();
               mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -97,17 +95,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
                 if (isScrolling && (currentItems + scrollingOutItems == totalItems)) {
                     isScrolling = false;
                     progressBar.setVisibility(View.VISIBLE);
-                    popularPeopleController.callScrollingFun();
-//                    if (isSearchAction) {
-//                        searchPage = searchPage + 1;
-//                        searchPageStr = String.valueOf(searchPage);
-//                        new AsyncFetch().execute(search_url+searchstr+"&page="+searchPageStr);
-//                    }
-//                    else {
-//                        page = page + 1;
-//                        pageStr = String.valueOf(page);
-//                        new AsyncFetch().execute(data_url+pageStr);
-//                    }
+                    popularPeoplePresenter.callScrollingFun();
                 }
             }
         });
@@ -130,7 +118,7 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
             isSearchAction = false;
             popularPeopleList.clear();
             searchView.clearFocus();
-            popularPeopleController.callFetchingData (utilities.popularPeopleURL+pageStr);
+            popularPeoplePresenter.callFetchingData (utilities.popularPeopleURL+pageStr);
         }
         return true;
     }
@@ -139,11 +127,9 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     public boolean onQueryTextSubmit(String s) {
         searchstr = s;
         if(!s.equals("")) {
-           this.clearList();
+            popularPeoplePresenter.clearList(popularPeopleList);
             isSearchAction = true;
-//            searchPage = 1 ;
-//            searchPageStr = String.valueOf(searchPage);
-            popularPeopleController.callFetchingData (utilities.search_url + s);  ;
+            popularPeoplePresenter.callFetchingData (utilities.search_url + s);  ;
         }
         searchView.clearFocus();
         return true;
@@ -158,13 +144,20 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void clearList() {
-        int size = popularPeopleList.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                popularPeopleList.remove(0);
-            }
-            popularPeopleAdapter.notifyItemRangeRemoved(0, size);
-        }
+    @Override
+    public List<PopularPeople> getList() {
+        return popularPeopleList ;
+    }
+
+    @Override
+    public Boolean getSearchState() {
+
+        return isSearchAction ;
+    }
+
+    @Override
+    public void notifyDataChanged(int size) {
+        popularPeopleAdapter.notifyItemRangeRemoved(0, size);
+
     }
 }

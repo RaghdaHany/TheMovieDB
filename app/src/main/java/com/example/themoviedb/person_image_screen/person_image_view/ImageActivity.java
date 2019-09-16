@@ -1,5 +1,6 @@
 package com.example.themoviedb.person_image_screen.person_image_view;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -7,18 +8,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.example.themoviedb.person_image_screen.person_image_controller.PersonImageController;
+import com.example.themoviedb.person_image_screen.person_image_model.PersonImageModel;
+import com.example.themoviedb.person_image_screen.person_image_presenter.PersonImagePresenter;
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
 
 
-public class ImageActivity extends AppCompatActivity {
+public class ImageActivity extends AppCompatActivity implements ImageAcvtivityInterface{
 
     ImageView personImage;
     Button saveImageBtn;
     String photo;
-    PersonImageController personImageController ;
+    PersonImagePresenter personImagePresenter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,16 +29,16 @@ public class ImageActivity extends AppCompatActivity {
 
         personImage = findViewById(R.id.imageid);
         saveImageBtn = findViewById(R.id.saveImageBtn);
-        personImageController = new PersonImageController(this );
+        personImagePresenter = new PersonImagePresenter(this , new PersonImageModel());
 
-        personImageController.getPicturePath ();
+        personImagePresenter.getPicturePath ();
 
 
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                personImageController.getPermission ();
+                personImagePresenter.getPermission ();
             }
         });
     }
@@ -48,5 +51,11 @@ public class ImageActivity extends AppCompatActivity {
         personImage.setDrawingCacheEnabled(true);
         Bitmap b = personImage.getDrawingCache();
         MediaStore.Images.Media.insertImage(getContentResolver(), b, photo, "");
+    }
+
+    @Override
+    public void setBroadcast(Intent mediaScanIntent) {
+        this.sendBroadcast(mediaScanIntent);
+        Toast.makeText(this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
     }
 }

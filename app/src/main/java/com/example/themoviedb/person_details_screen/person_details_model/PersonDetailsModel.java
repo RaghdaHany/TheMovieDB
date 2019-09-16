@@ -2,8 +2,7 @@ package com.example.themoviedb.person_details_screen.person_details_model;
 
 import android.os.AsyncTask;
 
-import com.example.themoviedb.person_details_screen.person_details_controller.PersonDetailsController;
-
+import com.example.themoviedb.person_details_screen.person_details_presenter.PersonDetailsPresenter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,14 +15,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class PersonDetailsModel {
-    PersonDetailsController personDetailsController;
+public class PersonDetailsModel implements PersonDetailsModelInterface {
+    PersonDetailsPresenter personDetailsPresenter;
 
-    public void setModel(PersonDetailsController personDetailsController) {
-        this.personDetailsController = personDetailsController;
-    }
-    public PersonDetailsModel(PersonDetailsController personDetailsController) {
-        this.personDetailsController = personDetailsController;
+    @Override
+    public void setModel(PersonDetailsPresenter personDetailsPresenter) {
+        this.personDetailsPresenter = personDetailsPresenter;
+
     }
 
     public class getPhotos extends AsyncTask<String, String, String> {
@@ -84,12 +82,10 @@ public class PersonDetailsModel {
                     JSONObject profileResult = jsonArray.getJSONObject(i);
                     Profiles personImage = new Profiles();
                     personImage.setFile_path(profileResult.getString("file_path"));
-                    personDetailsController.addPersonImages(personImage);
+                    personDetailsPresenter.addPersonImages(personImage);
                 }
 
-                    personDetailsController.setAdapter();
-//                adapter.notifyDataSetChanged();
-//                recyclerView.setLayoutManager(layoutManager);
+                personDetailsPresenter.setAdapter();
 
             } catch (JSONException e) {
                 e.printStackTrace();
