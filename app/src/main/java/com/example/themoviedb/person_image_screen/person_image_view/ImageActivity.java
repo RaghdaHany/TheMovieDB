@@ -14,6 +14,7 @@ import com.example.themoviedb.person_image_screen.person_image_model.PersonImage
 import com.example.themoviedb.person_image_screen.person_image_presenter.PersonImagePresenter;
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
+import com.squareup.picasso.Picasso;
 
 
 public class ImageActivity extends AppCompatActivity implements ImageAcvtivityInterface{
@@ -44,8 +45,10 @@ public class ImageActivity extends AppCompatActivity implements ImageAcvtivityIn
     }
 
     public void sendPhotoStringToActivity(String photo) {
-        new LoadImage(personImage).execute(photo);
-    }
+        Picasso.with(this).load(photo)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(personImage);    }
 
     public void savePhoto() {
         personImage.setDrawingCacheEnabled(true);

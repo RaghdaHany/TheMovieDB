@@ -18,7 +18,6 @@ public class PersonDetailsPresenter {
         this.personDetailsViewInterface = personDetailsViewInterface;
         this.personDetailsModelInterface = personDetailsModelInterface;
         personDetailsModelInterface.setModel(this);
-
     }
 
     public void addPersonImages(Profiles personImage) {
@@ -30,7 +29,6 @@ public class PersonDetailsPresenter {
     }
 
     public PopularPeople getPersonDetails() {
-
         Intent i = personDetailsViewInterface.getIntent();
         Bundle extras = i.getExtras();
 

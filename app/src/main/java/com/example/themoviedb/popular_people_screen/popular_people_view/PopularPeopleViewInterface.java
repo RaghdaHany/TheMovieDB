@@ -10,5 +10,5 @@ public interface PopularPeopleViewInterface {
     void settingAdapterInList();
     List<PopularPeople> getList();
     Boolean getSearchState();
-    void notifyDataChanged(int size);
+    void notifyDataRemoved(int size);
 }

@@ -29,9 +29,7 @@ public class PopularPeoplePresenter {
     public void callFetchingData(String s) {
         urlString = s ;
         popularPeopleModelInterface.startFetching (s);
-//        asyncFetch.execute(s);
     }
-
 
     public void addingPerson(PopularPeople person) {
         popularPeopleViewInterface.setPerson(person);
@@ -63,7 +61,7 @@ public class PopularPeoplePresenter {
             for (int i = 0; i < size; i++) {
                 peopleList.remove(0);
             }
-            popularPeopleViewInterface.notifyDataChanged(size);
+            popularPeopleViewInterface.notifyDataRemoved(size);
         }
     }
 
@@ -82,6 +80,4 @@ public class PopularPeoplePresenter {
             callFetchingData(utilities.popularPeopleURL + pageStr);
         }
     }
-
 }
-

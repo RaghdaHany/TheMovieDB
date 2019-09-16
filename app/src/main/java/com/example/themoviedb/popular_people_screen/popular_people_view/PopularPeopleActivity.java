@@ -32,15 +32,11 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     ProgressBar progressBar;
     android.widget.SearchView searchView;
 
-    String search_url;
-    String data_url;
     public Boolean isSearchAction= false;
     private String searchstr = "";
     private String pageStr="";
     MenuItem menuItem;
 
-    int searchPage = 1;
-    String searchPageStr="";
     PopularPeoplePresenter popularPeoplePresenter ;
     Utilities utilities;
 
@@ -56,15 +52,13 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
         popularPeopleAdapter = new PopularPeopleAdapter(PopularPeopleActivity.this, popularPeopleList);
         recyclerView.setAdapter(popularPeopleAdapter);
 
-        pageStr = String.valueOf(page);
         utilities = new Utilities();
         pageStr = String.valueOf(page);
         popularPeoplePresenter = new PopularPeoplePresenter(this , new PopularPeopleModel());
+
         popularPeoplePresenter.callFetchingData (utilities.popularPeopleURL+pageStr);
 
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
@@ -78,7 +72,6 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
             }
         });
 
-        ////////////////////////////////////////////////////////////////////////////////////
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -100,7 +93,6 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
             }
         });
     }
-////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,14 +142,13 @@ public class PopularPeopleActivity extends AppCompatActivity implements android.
     }
 
     @Override
-    public Boolean getSearchState() {
+    public void notifyDataRemoved (int size) {
+        popularPeopleAdapter.notifyItemRangeRemoved(0, size);
 
-        return isSearchAction ;
     }
 
     @Override
-    public void notifyDataChanged(int size) {
-        popularPeopleAdapter.notifyItemRangeRemoved(0, size);
-
+    public Boolean getSearchState() {
+        return isSearchAction ;
     }
 }

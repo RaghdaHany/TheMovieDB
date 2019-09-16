@@ -1,5 +1,6 @@
 package com.example.themoviedb.person_details_screen.person_details_view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,7 @@ import com.example.themoviedb.person_details_screen.person_details_model.Profile
 import com.example.themoviedb.R;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
 import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -51,20 +53,23 @@ public class PersonDetailsActivity extends AppCompatActivity implements PersonDe
         utilities = new Utilities();
 
         popularPeople = personDetailsPresenter.getPersonDetails();
-        String adultStr = new Boolean(popularPeople.isAdult()).toString();
 
-        new LoadImage(personImage).execute(utilities.photo_first_path + popularPeople.getProfile_path());
+        Picasso.with(this).load(utilities.photo_first_path + popularPeople.getProfile_path())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(personImage);
+
         personName.setText(popularPeople.getName());
         personDep.setText(popularPeople.getKnown_for_department());
+
+        String adultStr = new Boolean(popularPeople.isAdult()).toString();
         personAdult.setText("adult : " + adultStr);
         id = popularPeople.getId();
 
         personDetailsPresenter.fetchPersonImage("https://api.themoviedb.org/3/person/"+ id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
     }
 
-
-    public void setImage(Profiles personImage)
-    {
+    public void setImage(Profiles personImage) {
         profiles.add(personImage);
     }
 
@@ -72,4 +77,5 @@ public class PersonDetailsActivity extends AppCompatActivity implements PersonDe
         adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(layoutManager);
     }
+
 }

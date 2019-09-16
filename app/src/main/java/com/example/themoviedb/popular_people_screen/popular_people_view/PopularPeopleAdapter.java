@@ -15,16 +15,18 @@ import com.example.themoviedb.person_details_screen.person_details_view.PersonDe
 import com.example.themoviedb.R;
 import com.example.themoviedb.memory_cache.ImageLoader;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
+import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter;
+import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
 
 public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdapter.MyViewHolder> {
     private Context context;
-    private List<PopularPeople> popularPeopleList = Collections.emptyList();
+    private List<PopularPeople> popularPeopleList ;
     private LayoutInflater inflater;
-    private PopularPeople currentPopularPeople;
-    private int currentPos = 0 ;
+    String photo_first_path = "https://image.tmdb.org/t/p/w500/";
+    PopularPeoplePresenter popularPeoplePresenter;
 
     public PopularPeopleAdapter(Context context, List<PopularPeople> popularPeopleList) {
         this.context = context;
@@ -42,15 +44,10 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MyViewHolder myViewHolder= (MyViewHolder) holder;
-        String photo_first_path = "https://image.tmdb.org/t/p/w500/";
         PopularPeople currentPopularPeople = popularPeopleList.get(position);
-        myViewHolder.personName.setText(currentPopularPeople.getName());
-        myViewHolder.personDepartment.setText(currentPopularPeople.getKnown_for_department());
-//        myViewHolder.imageLoader.DisplayImage(photo_first_path+currentPopularPeople.profile_path, myViewHolder.personImage);
+
         holder.bind(popularPeopleList.get(position));
-        Drawable placeholder = holder.personImage.getContext().getResources().getDrawable(R.drawable.ic_launcher_background);
-        holder.personImage.setImageDrawable(placeholder);
-        new LoadImage(holder.personImage).execute(photo_first_path+currentPopularPeople.getProfile_path());
+
     }
 
     @Override
@@ -76,10 +73,17 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
 
         }
         private void bind (final PopularPeople popularPeople){
+            personName.setText(popularPeople.getName());
+            personDepartment.setText(popularPeople.getKnown_for_department());
+
+            Picasso.with(context).load(photo_first_path+popularPeople.getProfile_path())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(personImage);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    popularPeopleController.startDetailsActivity();
                     Intent intent = new Intent(context, PersonDetailsActivity.class);
                     intent.putExtra("person_name", popularPeople.getName());
                     intent.putExtra("person_department", popularPeople.getKnown_for_department());
