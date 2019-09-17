@@ -10,4 +10,6 @@ public interface ImageAcvtivityInterface {
     void savePhoto();
 
     void setBroadcast(Intent mediaScanIntent);
+
+    void getPermission();
 }

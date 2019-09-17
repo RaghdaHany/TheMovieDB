@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/imageid"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         android:scaleType="fitXY"/>
 
     <Button
@@ -20,7 +20,6 @@
         android:layout_gravity="center"
         android:foregroundGravity="bottom"
         android:text="Save Image"
-        android:textSize="18sp"
-        android:gravity="bottom" />
+        android:textSize="18sp" />
 
 </LinearLayout>

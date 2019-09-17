@@ -1,14 +1,7 @@
 package com.example.themoviedb.person_image_screen.person_image_presenter;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-
 import com.example.themoviedb.person_image_screen.person_image_model.PersonImageModelInterface;
 import com.example.themoviedb.person_image_screen.person_image_view.ImageAcvtivityInterface;
 
@@ -24,7 +17,6 @@ public class PersonImagePresenter {
         this.imageAcvtivityInterface = imageAcvtivityInterface;
         this.personImageModelInterface = personImageModelInterface;
         personImageModelInterface.setModel(this);
-
     }
 
     public void getPicturePath() {
@@ -34,13 +26,7 @@ public class PersonImagePresenter {
     }
 
     public void getPermission() {
-        if (ContextCompat.checkSelfPermission((Context) imageAcvtivityInterface, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED) {
-        }
-        else {
-            ActivityCompat.requestPermissions((Activity) imageAcvtivityInterface, new String[]
-                    { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
-        }
+        imageAcvtivityInterface.getPermission ();
         saveImage();
     }
 

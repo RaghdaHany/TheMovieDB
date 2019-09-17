@@ -1,8 +1,14 @@
 package com.example.themoviedb.person_image_screen.person_image_view;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +19,6 @@ import android.widget.Toast;
 import com.example.themoviedb.person_image_screen.person_image_model.PersonImageModel;
 import com.example.themoviedb.person_image_screen.person_image_presenter.PersonImagePresenter;
 import com.example.themoviedb.R;
-import com.example.themoviedb.popular_people_screen.popular_people_view.LoadImage;
 import com.squareup.picasso.Picasso;
 
 
@@ -60,5 +65,16 @@ public class ImageActivity extends AppCompatActivity implements ImageAcvtivityIn
     public void setBroadcast(Intent mediaScanIntent) {
         this.sendBroadcast(mediaScanIntent);
         Toast.makeText(this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void getPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED) {
+        }
+        else {
+            ActivityCompat.requestPermissions(ImageActivity.this, new String[]
+                    { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }
     }
 }
