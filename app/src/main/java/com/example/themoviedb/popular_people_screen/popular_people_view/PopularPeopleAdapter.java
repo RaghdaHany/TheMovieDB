@@ -57,10 +57,10 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView personImage ;
-        TextView personName ;
-        TextView personDepartment ;
-        ImageLoader imageLoader ;
+        ImageView personImage;
+        TextView personName;
+        TextView personDepartment;
+        ImageLoader imageLoader;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,11 +72,12 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
 
 
         }
-        private void bind (final PopularPeople popularPeople){
+
+        private void bind(final PopularPeople popularPeople) {
             personName.setText(popularPeople.getName());
             personDepartment.setText(popularPeople.getKnown_for_department());
 
-            Picasso.with(context).load(photo_first_path+popularPeople.getProfile_path())
+            Picasso.with(context).load(photo_first_path + popularPeople.getProfile_path())
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
                     .into(personImage);
@@ -87,20 +88,15 @@ public class PopularPeopleAdapter extends RecyclerView.Adapter<PopularPeopleAdap
                     Intent intent = new Intent(context, PersonDetailsActivity.class);
                     intent.putExtra("person_name", popularPeople.getName());
                     intent.putExtra("person_department", popularPeople.getKnown_for_department());
-                    intent.putExtra("person_adult",popularPeople.isAdult());
-                    intent.putExtra("person_popularity",popularPeople.getPopularity());
-                    intent.putExtra("profile_path" , popularPeople.getProfile_path());
-                    intent.putExtra("person_id" , popularPeople.getId());
-                    context.startActivity(intent);
-
-                }
+                    intent.putExtra("person_adult", popularPeople.isAdult());
+                    intent.putExtra("person_popularity", popularPeople.getPopularity());
+                    intent.putExtra("profile_path", popularPeople.getProfile_path());
+                    intent.putExtra("person_id", popularPeople.getId());
+                    context.startActivity(intent);                }
             });
 
         }
 
 
-
     }
-
-
 }

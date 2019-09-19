@@ -1,5 +1,6 @@
 package com.example.themoviedb.popular_people_screen.popular_people_view;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.example.themoviedb.R;
 import com.example.themoviedb.others.Utilities;
+import com.example.themoviedb.person_details_screen.person_details_view.PersonDetailsActivity;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
