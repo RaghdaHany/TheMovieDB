@@ -10,4 +10,6 @@ public interface PersonDetailsViewInterface {
     void setImagesInAdapter();
 
     Intent getIntent();
+
+    void getPersonDetails();
 }

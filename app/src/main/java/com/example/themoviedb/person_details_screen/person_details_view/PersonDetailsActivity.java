@@ -1,5 +1,6 @@
 package com.example.themoviedb.person_details_screen.person_details_view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,10 +29,14 @@ public class PersonDetailsActivity extends AppCompatActivity implements PersonDe
     private RecyclerView recyclerView;
     ArrayList<Profiles> profiles ;
     GridAdapter adapter ;
-    int id = 0 ;
     LinearLayoutManager layoutManager;
     PersonDetailsPresenter personDetailsPresenter ;
     Utilities utilities ;
+    String name ;
+    String dep ;
+    int id = 0;
+    Boolean adult ;
+    String profile_path ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +54,20 @@ public class PersonDetailsActivity extends AppCompatActivity implements PersonDe
         recyclerView.setAdapter(adapter);
         personDetailsPresenter = new PersonDetailsPresenter(this , new PersonDetailsModel());
         utilities = new Utilities();
+        popularPeople = new PopularPeople();
 
-        popularPeople = personDetailsPresenter.getPersonDetails();
+        personDetailsPresenter.getPersonDetails();
 
         Picasso.with(this).load(utilities.photo_first_path + popularPeople.getProfile_path())
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(personImage);
 
-        personName.setText(popularPeople.getName());
-        personDep.setText(popularPeople.getKnown_for_department());
+        personName.setText(name);
+        personDep.setText(dep);
 
-        String adultStr = new Boolean(popularPeople.isAdult()).toString();
+        String adultStr = new Boolean(adult).toString();
         personAdult.setText("adult : " + adultStr);
-        id = popularPeople.getId();
 
         personDetailsPresenter.fetchPersonImage("https://api.themoviedb.org/3/person/"+ id +"/images?api_key=e6f20f39139b1f5a2be132cbaaa9ce43" );
     }
@@ -74,6 +79,24 @@ public class PersonDetailsActivity extends AppCompatActivity implements PersonDe
     public void setImagesInAdapter() {
         adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    public void getPersonDetails() {
+        Intent i = this.getIntent();
+        Bundle extras = i.getExtras();
+
+         name = extras.getString("person_name");
+         dep = extras.getString("person_department");
+         id = extras.getInt("person_id", 1);
+         adult = extras.getBoolean("person_adult", true);
+         profile_path = extras.getString("profile_path");
+
+        popularPeople.setName(name);
+        popularPeople.setId(id);
+        popularPeople.setKnown_for_department(dep);
+        popularPeople.setAdult(adult);
+        popularPeople.setProfile_path(profile_path);
     }
 
 }

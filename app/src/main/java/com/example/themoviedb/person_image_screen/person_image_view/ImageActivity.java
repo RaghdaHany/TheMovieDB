@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,8 @@ import com.example.themoviedb.person_image_screen.person_image_model.PersonImage
 import com.example.themoviedb.person_image_screen.person_image_presenter.PersonImagePresenter;
 import com.example.themoviedb.R;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 
 public class ImageActivity extends AppCompatActivity implements ImageAcvtivityInterface{
@@ -49,22 +52,18 @@ public class ImageActivity extends AppCompatActivity implements ImageAcvtivityIn
         });
     }
 
+    @Override
+    public void getPicturePath() {
+        Intent intent = this.getIntent();
+        photo = intent.getStringExtra("picture_path");
+        this.sendPhotoStringToActivity (photo);
+    }
+
     public void sendPhotoStringToActivity(String photo) {
         Picasso.with(this).load(photo)
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
-                .into(personImage);    }
-
-    public void savePhoto() {
-        personImage.setDrawingCacheEnabled(true);
-        Bitmap b = personImage.getDrawingCache();
-        MediaStore.Images.Media.insertImage(getContentResolver(), b, photo, "");
-    }
-
-    @Override
-    public void setBroadcast(Intent mediaScanIntent) {
-        this.sendBroadcast(mediaScanIntent);
-        Toast.makeText(this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
+                .into(personImage);
     }
 
     @Override
@@ -76,5 +75,23 @@ public class ImageActivity extends AppCompatActivity implements ImageAcvtivityIn
             ActivityCompat.requestPermissions(ImageActivity.this, new String[]
                     { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }
+    }
+
+    public void savePhoto() {
+        personImage.setDrawingCacheEnabled(true);
+        Bitmap b = personImage.getDrawingCache();
+        MediaStore.Images.Media.insertImage(getContentResolver(), b, photo, "");
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(photo);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.setBroadcast (mediaScanIntent);
+    }
+
+    @Override
+    public void setBroadcast(Intent mediaScanIntent) {
+        this.sendBroadcast(mediaScanIntent);
+        Toast.makeText(this, "Photo Saved Successfully", Toast.LENGTH_LONG).show();
     }
 }

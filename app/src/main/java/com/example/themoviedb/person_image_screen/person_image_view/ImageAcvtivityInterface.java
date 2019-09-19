@@ -3,7 +3,6 @@ package com.example.themoviedb.person_image_screen.person_image_view;
 import android.content.Intent;
 
 public interface ImageAcvtivityInterface {
-    Intent getIntent();
 
     void sendPhotoStringToActivity(String photo);
 
@@ -12,4 +11,6 @@ public interface ImageAcvtivityInterface {
     void setBroadcast(Intent mediaScanIntent);
 
     void getPermission();
+
+    void getPicturePath();
 }
