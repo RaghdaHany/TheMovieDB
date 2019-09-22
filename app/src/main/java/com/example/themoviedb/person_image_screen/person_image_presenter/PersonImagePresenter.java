@@ -10,7 +10,6 @@ public class PersonImagePresenter {
     public PersonImagePresenter(ImageAcvtivityInterface imageAcvtivityInterface, PersonImageModelInterface personImageModelInterface) {
         this.imageAcvtivityInterface = imageAcvtivityInterface;
         this.personImageModelInterface = personImageModelInterface;
-        personImageModelInterface.setModel(this);
     }
 
     public void getPicturePath() {
@@ -25,6 +24,5 @@ public class PersonImagePresenter {
 
     private void saveImage(){
         imageAcvtivityInterface.savePhoto ();
-
     }
 }

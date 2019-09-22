@@ -18,13 +18,14 @@ import java.net.URL;
 public class PopularPeopleModel implements PopularPeopleModelInterface {
     private static final int CONNECTION_TIMEOUT = 10000;
     private static final int READ_TIMEOUT = 15000;
-    PopularPeoplePresenter popularPeoplePresenter;
 
-    public void setModel(PopularPeoplePresenter popularPeoplePresenter) {
-        this.popularPeoplePresenter = popularPeoplePresenter;
-    }
+    public static class AsyncFetch extends AsyncTask<String, String, String> {
 
-    public class AsyncFetch extends AsyncTask<String, String, String> {
+        public AsyncResponseInterface asyncResponse = null;   //Call back interface
+
+        public AsyncFetch(AsyncResponseInterface asyncResponseInterface) {
+            asyncResponse = asyncResponseInterface;        //Assigning call back interface through constructor
+        }
 
         HttpURLConnection conn;
         URL url = null;
@@ -103,18 +104,12 @@ public class PopularPeopleModel implements PopularPeopleModelInterface {
                     person.setProfile_path(json_data.getString("profile_path"));
                     person.setId(json_data.getInt("id"));
 
-                    popularPeoplePresenter.addingPerson(person);
+                    asyncResponse.processFinish(person);
                 }
-
-                popularPeoplePresenter.settingAdapter();
 
             } catch (JSONException e) {
             }
 
         }
-    }
-
-    public void startFetching(String s) {
-        new AsyncFetch().execute(s);
     }
 }

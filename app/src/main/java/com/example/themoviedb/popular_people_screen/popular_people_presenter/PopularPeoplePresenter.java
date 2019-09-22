@@ -1,7 +1,9 @@
 package com.example.themoviedb.popular_people_screen.popular_people_presenter;
 
 import com.example.themoviedb.others.Utilities;
+import com.example.themoviedb.popular_people_screen.popular_people_model.AsyncResponseInterface;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeople;
+import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModel;
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModelInterface;
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleViewInterface;
 
@@ -22,17 +24,20 @@ public class PopularPeoplePresenter {
     public PopularPeoplePresenter(PopularPeopleViewInterface popularPeopleViewInterface, PopularPeopleModelInterface popularPeopleModelInterface) {
         this.popularPeopleViewInterface = popularPeopleViewInterface;
         this.popularPeopleModelInterface = popularPeopleModelInterface;
-        popularPeopleModelInterface.setModel(this);
-
     }
 
     public void callFetchingData(String s) {
-        urlString = s ;
-        popularPeopleModelInterface.startFetching (s);
-    }
 
-    public void addingPerson(PopularPeople person) {
-        popularPeopleViewInterface.setPerson(person);
+        PopularPeopleModel.AsyncFetch asyncFetch = new PopularPeopleModel.AsyncFetch (new AsyncResponseInterface() {
+
+            @Override
+            public void processFinish(PopularPeople popularPeople) {
+                popularPeopleViewInterface.setPerson(popularPeople);
+                settingAdapter();
+            }
+        });
+        urlString = s ;
+        asyncFetch.execute(s);
     }
 
     public void settingAdapter() {

@@ -16,15 +16,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PersonDetailsModel implements PersonDetailsModelInterface {
-    PersonDetailsPresenter personDetailsPresenter;
 
-    @Override
-    public void setModel(PersonDetailsPresenter personDetailsPresenter) {
-        this.personDetailsPresenter = personDetailsPresenter;
+//    PersonDetailsPresenter personDetailsPresenter;
+//
+//    @Override
+//    public void setModel(PersonDetailsPresenter personDetailsPresenter) {
+//        this.personDetailsPresenter = personDetailsPresenter;
+//
+//    }
 
-    }
+    public static class GetPhotos extends AsyncTask<String, String, String> {
 
-    public class getPhotos extends AsyncTask<String, String, String> {
+        public AsyncFetchinImagesInterface asyncFetchinImagesInterface = null;//Call back interface
+
+        public GetPhotos(AsyncFetchinImagesInterface asyncResponse) {
+            asyncFetchinImagesInterface = asyncResponse;       //Assigning call back interface through constructor
+        }
 
         HttpURLConnection httpURLConnection = null;
         URL url = null ;
@@ -82,19 +89,15 @@ public class PersonDetailsModel implements PersonDetailsModelInterface {
                     JSONObject profileResult = jsonArray.getJSONObject(i);
                     Profiles personImage = new Profiles();
                     personImage.setFile_path(profileResult.getString("file_path"));
-                    personDetailsPresenter.addPersonImages(personImage);
+                    asyncFetchinImagesInterface.processFinish(personImage);
+//                    personDetailsPresenter.addPersonImages(personImage);
                 }
 
-                personDetailsPresenter.setAdapter();
+//                personDetailsPresenter.setAdapter();
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void startFetchingImage(String s) {
-
-        new getPhotos().execute(s);
     }
 }
