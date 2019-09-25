@@ -1,15 +1,13 @@
 package com.example.themoviedb.popular_people_screen.popular_people_model
 
 import android.os.AsyncTask
-import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter
+import com.example.themoviedb.others.Utilities
 
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -17,13 +15,21 @@ import java.net.URL
 
 class PopularPeopleModel : PopularPeopleModelInterface {
 
-    class AsyncFetch(asyncResponseInterface: AsyncResponseInterface) : AsyncTask<String, String, String>() {
+    override fun sendSearchData(s: String, searchState: Boolean?) {
+        if (searchState != null) {
+            receivedSearchState = searchState
+        }
+        searchString = s
+    }
 
+    class AsyncFetch(asyncResponseInterface: AsyncResponseInterface, page: Int) : AsyncTask<String, String, String>() {
+
+        var page = page
         var asyncResponse: AsyncResponseInterface? = null   //Call back interface
 
         internal lateinit var conn: HttpURLConnection
         internal var url: URL? = null
-
+        var utilities : Utilities = Utilities()
         init {
             asyncResponse = asyncResponseInterface        //Assigning call back interface through constructor
         }
@@ -34,7 +40,16 @@ class PopularPeopleModel : PopularPeopleModelInterface {
 
         override fun doInBackground(vararg params: String): String {
             try {
-                url = URL(params[0])
+                if (receivedSearchState == true){
+                    url = URL(utilities.search_url + searchString + utilities.pageURL + page)
+                }
+                else{
+                    url = URL(utilities.popularPeopleURL + page)
+
+                }
+
+                receivedSearchState = false
+
 
             } catch (e: MalformedURLException) {
                 e.printStackTrace()
@@ -111,5 +126,7 @@ class PopularPeopleModel : PopularPeopleModelInterface {
     companion object {
         private val CONNECTION_TIMEOUT = 10000
         private val READ_TIMEOUT = 15000
+        var receivedSearchState : Boolean = false
+        lateinit var searchString: String
     }
 }

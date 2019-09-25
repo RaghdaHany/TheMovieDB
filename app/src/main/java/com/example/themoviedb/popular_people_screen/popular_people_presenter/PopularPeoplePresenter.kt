@@ -15,17 +15,18 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
     internal var searchPageStr = ""
     internal var searchState: Boolean? = null
     internal lateinit var peopleList: MutableList<PopularPeople>
+    internal var page = 1
+    lateinit var searchStr : String
 
-    fun callFetchingData(s: String) {
-
+    fun callFetchingData() {
         val asyncFetch = PopularPeopleModel.AsyncFetch(object : AsyncResponseInterface {
             override fun processFinish(popularPeople: PopularPeople) {
                 popularPeopleViewInterface.setPerson(popularPeople)
                 settingAdapter()
             }
-        })
-        urlString = s
-        asyncFetch.execute(s)
+        } , page)
+//        urlString = s
+        asyncFetch.execute()
     }
 
     fun settingAdapter() {
@@ -39,12 +40,12 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
 
         searchState = popularPeopleViewInterface.getSearchState()
         if (searchState!!) {
-            callFetchingData(urlString + utilities.pageURL + utilities.firstPage)
-            utilities.searchPage = 1
+            page = 1
+            callFetchingData()
 
         } else {
-            callFetchingData(utilities.popularPeopleURL + utilities.firstPage)
-            utilities.popularPeoplePage = 1
+            page = 1
+            callFetchingData()
         }
     }
 
@@ -62,19 +63,38 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
 
         searchState = popularPeopleViewInterface.getSearchState()
 
-        if (searchState!!) {
+        if (searchState == true) {
             utilities.searchPage = utilities.searchPage + 1
             searchPageStr = utilities.searchPage.toString()
-            callFetchingData(urlString + utilities.pageURL + searchPageStr)
+
+            callFetchingData()
 
         } else {
-            utilities.popularPeoplePage = utilities.popularPeoplePage + 1
-            pageStr = utilities.popularPeoplePage.toString()
-            callFetchingData(utilities.popularPeopleURL + pageStr)
+            page = page + 1
+//            utilities.popularPeoplePage = utilities.popularPeoplePage + 1
+//            pageStr = utilities.popularPeoplePage.toString()
+            callFetchingData()
         }
+        searchState = false
     }
 
     fun searchData(s: String) {
-        this.callFetchingData(s)
+        searchState = popularPeopleViewInterface.getSearchState()
+        this.sendSearcDataToMobel (s , searchState)
+
+//        this.callFetchingData()
+        val asyncFetch = PopularPeopleModel.AsyncFetch(object : AsyncResponseInterface {
+            override fun processFinish(popularPeople: PopularPeople) {
+                popularPeopleViewInterface.setPerson(popularPeople)
+                settingAdapter()
+            }
+        } , page)
+//        urlString = s
+        asyncFetch.execute()
+
+    }
+
+    private fun sendSearcDataToMobel(s: String, searchState: Boolean?) {
+        popularPeopleModelInterface.sendSearchData(s , searchState)
     }
 }

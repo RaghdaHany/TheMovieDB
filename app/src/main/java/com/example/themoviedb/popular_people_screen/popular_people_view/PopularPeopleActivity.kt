@@ -57,7 +57,7 @@ class PopularPeopleActivity : AppCompatActivity(), android.widget.SearchView.OnQ
         pageStr = page.toString()
         popularPeoplePresenter = PopularPeoplePresenter(this, PopularPeopleModel())
 
-        popularPeoplePresenter.callFetchingData(utilities.popularPeopleURL + pageStr)
+        popularPeoplePresenter.callFetchingData()
 
         mSwipeRefreshLayout = findViewById<View>(R.id.swipe_container) as SwipeRefreshLayout
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
@@ -102,9 +102,8 @@ class PopularPeopleActivity : AppCompatActivity(), android.widget.SearchView.OnQ
     override fun onQueryTextChange(s: String): Boolean {
         if (searchView.query.length == 0) {
             isSearchAction = false
-            popularPeopleList!!.clear()
             searchView.clearFocus()
-            popularPeoplePresenter.callFetchingData(utilities.popularPeopleURL + pageStr)
+            popularPeoplePresenter.callFetchingData()
         }
         return true
     }
@@ -114,7 +113,7 @@ class PopularPeopleActivity : AppCompatActivity(), android.widget.SearchView.OnQ
         if (s != "") {
             popularPeoplePresenter.clearList(popularPeopleList!!)
             isSearchAction = true
-            popularPeoplePresenter.callFetchingData(utilities.search_url + s)
+            popularPeoplePresenter.searchData(s)
         }
         searchView.clearFocus()
         return true
