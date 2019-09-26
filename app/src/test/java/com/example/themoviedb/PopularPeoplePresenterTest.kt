@@ -4,9 +4,8 @@ import com.example.themoviedb.popular_people_screen.popular_people_model.Popular
 import com.example.themoviedb.popular_people_screen.popular_people_model.PopularPeopleModelInterface
 import com.example.themoviedb.popular_people_screen.popular_people_presenter.PopularPeoplePresenter
 import com.example.themoviedb.popular_people_screen.popular_people_view.PopularPeopleViewInterface
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.*
+import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -28,21 +27,73 @@ class PopularPeoplePresenterTest {
         popularPeoplePresenter = PopularPeoplePresenter(popularPeopleViewInterface,popularPeopleModelInterface)
     }
 
-    @Test
-    fun getFetchedDataTest (){
-        val url = "https://api.themoviedb.org/3/person/popular?api_key=e6f20f39139b1f5a2be132cbaaa9ce43&page=1"
-        popularPeoplePresenter?.callFetchingData(url)
+//    @Test
+//    fun getFetchedDataTest (){
+//        var page = 1
+//        popularPeoplePresenter?.callFetchingData()
+//
+//        val callback = argumentCaptor<(PopularPeople?) -> Unit>()
+//        val popularPeople = PopularPeople()
+//        Mockito.`when`(popularPeoplePresenter?.callFetchingData())
+//                .then {
+//                    callback.firstValue.invoke(popularPeople)
+//                }
+//        verify(popularPeopleViewInterface).settingAdapterInList()
+//    }
 
-        val callback = argumentCaptor<(PopularPeople?) -> Unit>()
-        val popularPeople = PopularPeople()
-        Mockito.`when`(popularPeoplePresenter?.callFetchingData(url))
-                .then {
-                    callback.firstValue.invoke(popularPeople)
-                }
-        verify(popularPeopleViewInterface).settingAdapterInList()
+    @Test
+    fun callScrollFunctionTest() {
+        val expectedPageNumber = 2
+
+        popularPeoplePresenter?.callScrollingFun()
+
+        whenever(popularPeoplePresenter?.searchState != true )
+
+        assertEquals(expectedPageNumber, popularPeoplePresenter?.page)
     }
 
+    @Test
+    fun callSearchScrollFunctionTest() {
+        val expectedPageNumber = 2
 
+        popularPeoplePresenter?.callScrollingFun()
 
+        whenever(popularPeoplePresenter?.searchState == true )
 
+        assertEquals(expectedPageNumber,  popularPeoplePresenter?.page)
+    }
+
+    @Test
+    fun clearListTest() {
+        popularPeoplePresenter?.callFetchingData()
+        var size = popularPeopleViewInterface.getList()?.size
+         size = 20
+        val expectedSize = 0
+        var sizeAfterClear :Int
+
+        if (size != null) {
+            if (size > 0){
+                popularPeoplePresenter?.clearList()
+            }
+
+        }
+        sizeAfterClear = popularPeopleViewInterface.getList()?.size!!
+        assertEquals(expectedSize, sizeAfterClear)
+    }
+
+    @Test
+    fun callSwipeFunctionTest() {
+
+        val expectedPageNumber = 1
+        popularPeoplePresenter?.page = 2
+
+        popularPeoplePresenter?.callFetchingData()
+        popularPeoplePresenter?.callSwipeFun()
+
+        this.clearListTest()
+
+        if(popularPeoplePresenter?.searchState != true ){
+            assertEquals(expectedPageNumber, popularPeoplePresenter?.page)
+        }
+    }
 }

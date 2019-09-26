@@ -111,7 +111,7 @@ class PopularPeopleActivity : AppCompatActivity(), android.widget.SearchView.OnQ
     override fun onQueryTextSubmit(s: String): Boolean {
         searchstr = s
         if (s != "") {
-            popularPeoplePresenter.clearList(popularPeopleList!!)
+            popularPeoplePresenter.clearList()
             isSearchAction = true
             popularPeoplePresenter.searchData(s)
         }

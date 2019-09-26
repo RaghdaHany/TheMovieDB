@@ -14,7 +14,7 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
     internal var pageStr = ""
     internal var searchPageStr = ""
     internal var searchState: Boolean? = null
-    internal lateinit var peopleList: MutableList<PopularPeople>
+    var peopleList: MutableList<PopularPeople>? = null
     internal var page = 1
     lateinit var searchStr : String
 
@@ -36,7 +36,7 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
     fun callSwipeFun() {
 
         peopleList = popularPeopleViewInterface.getList()!!.toMutableList()
-        this.clearList(peopleList)
+        this.clearList()
 
         searchState = popularPeopleViewInterface.getSearchState()
         if (searchState!!) {
@@ -49,13 +49,16 @@ class PopularPeoplePresenter(internal var popularPeopleViewInterface: PopularPeo
         }
     }
 
-    fun clearList(peopleList: MutableList<*>) {
-        val size = peopleList.size
-        if (size > 0) {
-            for (i in 0 until size) {
-                peopleList.removeAt(0)
+    fun clearList() {
+        peopleList = popularPeopleViewInterface.getList() as MutableList<PopularPeople>?
+        val size = peopleList?.size
+        if (size != null) {
+            if (size > 0) {
+                for (i in 0 until size) {
+                    peopleList?.removeAt(0)
+                }
+                popularPeopleViewInterface.notifyDataRemoved(size)
             }
-            popularPeopleViewInterface.notifyDataRemoved(size)
         }
     }
 
