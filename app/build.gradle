@@ -43,6 +43,17 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.7.22'
     testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     testImplementation 'org.mockito:mockito-inline:2.13.0'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+
+    }
+
 }
 repositories {
     mavenCentral()

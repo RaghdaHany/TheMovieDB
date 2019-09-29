@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".person_image_screen.person_image_view.ImageActivity"></activity>
-        <activity android:name=".person_details_screen.person_details_view.PersonDetailsActivity" />
+        <activity android:name=".person_image_screen.person_image_view.ImageActivity"
+            android:label="IMAGE SCREEN"></activity>
+        <activity android:name=".person_details_screen.person_details_view.PersonDetailsActivity"
+            android:label="PERSON DETAILS SCREEN"/>
 
         <activity android:name=".others.OkHttpActivity" />
         <activity android:name=".popular_people_screen.popular_people_view.PopularPeopleActivity">
