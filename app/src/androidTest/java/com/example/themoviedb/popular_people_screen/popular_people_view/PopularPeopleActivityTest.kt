@@ -12,7 +12,6 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.ViewGroup
-import com.example.themoviedb.R
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -20,6 +19,10 @@ import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import android.support.test.espresso.action.ViewActions.swipeDown
+import android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition
+import kotlin.concurrent.thread
+
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -31,7 +34,7 @@ class PopularPeopleActivityTest {
 
     @Test
     fun checkDetailsScreenOpened() {
-        val recyclerView = onView(withId(R.id.recyclerViewId))
+        val recyclerView = onView(withId(com.example.themoviedb.R.id.recyclerViewId))
 
         val textView = onView(withText("PERSON DETAILS SCREEN"))
 
@@ -39,6 +42,16 @@ class PopularPeopleActivityTest {
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
 
         textView.check(matches(withText("PERSON DETAILS SCREEN")))
+    }
+
+    @Test
+    fun ScrollingTest (){
+        Thread.sleep(3000)
+        tapRecyclerViewItem(com.example.themoviedb.R.id.recyclerViewId , 22)
+    }
+
+    fun tapRecyclerViewItem(recyclerViewId: Int, position: Int) {
+        onView(withId(recyclerViewId)).perform(scrollToPosition<ViewHolder>(position))
     }
 
     private fun childAtPosition(
